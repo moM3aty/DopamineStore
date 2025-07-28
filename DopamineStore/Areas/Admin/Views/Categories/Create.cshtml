@@ -1,0 +1,29 @@
+﻿@model DopamineStore.Models.Category
+@{
+    ViewData["Title"] = "إضافة قسم جديد";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-right me-2"></i>العودة للقائمة
+    </a>
+</div>
+
+<div class="content-card">
+    <div class="card-body p-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4 text-end">
+                <button type="submit" class="btn btn-add-new">
+                    <i class="fas fa-plus me-2"></i>إضافة القسم
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

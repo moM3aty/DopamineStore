@@ -1,0 +1,49 @@
+﻿@model IEnumerable<DopamineStore.Models.Category>
+@{
+    ViewData["Title"] = "إدارة الأقسام";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-add-new"><i class="fas fa-plus me-2"></i>إضافة قسم جديد</a>
+</div>
+
+<!-- Filter Card -->
+<div class="filter-card mb-4">
+    <form asp-action="Index" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-10">
+                <label for="searchString" class="form-label">البحث باسم القسم</label>
+                <input type="text" class="form-control" name="searchString" id="searchString" value="@ViewData["CurrentFilter"]" placeholder="اكتب اسم القسم...">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>تصفية</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="content-card category-table-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="p-3">اسم القسم</th>
+                    <th class="p-3 text-end">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="p-3 category-name">@item.Name</td>
+                        <td class="p-3 text-end action-buttons">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="تعديل"><i class="fas fa-pencil-alt"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

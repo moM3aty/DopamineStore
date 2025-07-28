@@ -1,0 +1,33 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "تعليمات الدفع";
+}
+
+<section class="container text-center" style="padding-top: 120px; padding-bottom: 80px;">
+    <div class="section-header">
+        <h2>تم استلام طلبك بنجاح!</h2>
+        <p class="lead">رقم طلبك هو #@Model.Id. يرجى اتباع التعليمات التالية لإتمام عملية الدفع.</p>
+    </div>
+    <div class="payment-instructions-card col-md-8 mx-auto">
+        @if (Model.PaymentMethod == "Instapay")
+        {
+            <h3 class="payment-title">الدفع عبر انستا باي (Instapay)</h3>
+            <img src="~/img/instapay-qr.png" alt="Instapay QR Code" class="qr-code-img">
+            <p class="payment-details">
+                امسح الكود أو قم بتحويل المبلغ الإجمالي وقدره <strong>@Model.TotalAmount.ToString("C")</strong>
+                إلى حساب انستا باي التالي: <strong>username@instapay</strong>.
+            </p>
+        }
+        else if (Model.PaymentMethod == "Wallet")
+        {
+            <h3 class="payment-title">الدفع عبر محفظة إلكترونية</h3>
+            <img src="~/img/wallet-qr.png" alt="Wallet QR Code" class="qr-code-img">
+            <p class="payment-details">
+                امسح الكود أو قم بتحويل المبلغ الإجمالي وقدره <strong>@Model.TotalAmount.ToString("C")</strong>
+                إلى الرقم التالي: <strong>01234567890</strong>.
+            </p>
+        }
+        <p class="confirmation-note">سيتم تأكيد طلبك وشحنه فور استلام المبلغ.</p>
+    </div>
+    <a asp-controller="Home" asp-action="Index" class="btn-main mt-4">العودة للصفحة الرئيسية</a>
+</section>

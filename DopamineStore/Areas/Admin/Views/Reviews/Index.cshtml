@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Review>
+@{
+    ViewData["Title"] = "إدارة التقييمات";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<!-- Filter Card -->
+<div class="content-card filter-card mb-4">
+    <form asp-action="Index" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="searchString" class="form-label">البحث باسم المنتج أو المراجع</label>
+                <input type="text" class="form-control" name="searchString" id="searchString" value="@(ViewData["CurrentFilter"])">
+            </div>
+            <div class="col-md-4">
+                <label for="rating" class="form-label">الفلترة بالتقييم</label>
+                <select name="rating" id="rating" class="form-select" asp-items="@(new SelectList(Enumerable.Range(1, 5).Select(i => new { Value = i, Text = $"{i} نجوم" }), "Value", "Text", ViewData["CurrentRating"]))">
+                    <option value="">كل التقييمات</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>تصفية</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row gy-4">
+    @foreach (var item in Model)
+    {
+        <div class="col-lg-4 col-md-6">
+            <div class="review-card">
+                <div class="review-card-header">
+                    <div class="review-product-info">
+                        <a class="product-link" asp-action="Edit" asp-controller="Products" asp-route-id="@item.ProductId">@item.Product.Name</a>
+                        <div class="review-rating mt-1">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="fas fa-star @(i <= item.Rating ? "filled" : "")"></i>
+                            }
+                        </div>
+                    </div>
+                    <form asp-action="ToggleApproval" asp-route-id="@item.Id" method="post" class="approval-form">
+                        @Html.AntiForgeryToken()
+                        <div class="form-check form-switch approval-switch" title="الموافقة على الظهور في الموقع">
+                            <input class="form-check-input" type="checkbox" data-id="@item.Id" @(item.IsApproved ? "checked" : "") onchange="this.form.submit()">
+                        </div>
+                    </form>
+                </div>
+                <p class="review-comment">"@item.Comment"</p>
+                <div class="review-card-footer">
+                    <span><i class="fas fa-user me-2"></i>@item.ReviewerName</span>
+                    <span><i class="fas fa-calendar-alt me-2"></i>@item.ReviewDate.ToShortDateString()</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>

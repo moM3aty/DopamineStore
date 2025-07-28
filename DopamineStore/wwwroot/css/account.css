@@ -1,0 +1,93 @@
+﻿@font-face {
+    font-family: 'Hayah';
+    src: url('../font/alfont_com_AlFont_com_Hayah-1.otf') format('opentype');
+}
+
+:root {
+    --brand-primary: #a04e50;
+    --brand-secondary: #ff6488;
+    --brand-light: #ffcdd9;
+    --brand-background: #fdf8f9;
+    --brand-text: #4e4e4e;
+    --font-heading: 'Hayah', cursive;
+    --font-body: 'Tajawal', sans-serif;
+}
+
+.account-body {
+    background-color: var(--brand-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 0;
+    font-family: var(--font-body);
+}
+
+.account-card {
+    background-color: #fff;
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-top: 5px solid var(--brand-primary);
+}
+
+.account-header {
+    text-align: center;
+    padding: 2rem 1.5rem 1rem 1.5rem;
+}
+
+    .account-header .logo {
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        color: var(--brand-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .account-header h3 {
+        font-family: var(--font-body);
+        font-weight: 700;
+        color: var(--brand-text);
+    }
+
+.account-card .form-control {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    height: auto;
+    transition: all 0.3s ease;
+}
+
+    .account-card .form-control:focus {
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 0.25rem rgba(160, 78, 80, 0.25);
+    }
+
+.btn-account {
+    background: linear-gradient(45deg, var(--brand-secondary), var(--brand-primary));
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+    .btn-account:hover {
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(255, 100, 136, 0.4);
+        transform: translateY(-2px);
+    }
+
+.account-footer a {
+    color: var(--brand-primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+    .account-footer a:hover {
+        color: var(--brand-secondary);
+        text-decoration: underline;
+    }

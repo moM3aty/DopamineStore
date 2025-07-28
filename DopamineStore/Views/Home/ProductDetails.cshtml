@@ -1,0 +1,160 @@
+﻿@model Product
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = Model.Name;
+    var approvedReviews = Model.Reviews.Where(r => r.IsApproved).ToList();
+    var averageRating = approvedReviews.Any() ? approvedReviews.Average(r => r.Rating) : 0;
+    var totalRatings = approvedReviews.Count();
+    bool hasOffer = Model.OfferEndDate.HasValue && Model.OfferEndDate > DateTime.Now;
+}
+
+<div class="product-details-section">
+    <div class="container">
+        <div class="row gy-5">
+            <!-- Product Gallery -->
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="product-gallery">
+                    <div class="main-image-container mb-3">
+                        <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? $"https://placehold.co/800x800/F4E1E6/A64B63?text={Uri.EscapeDataString(Model.Name)}" : Model.ImageUrl)" alt="@Model.Name" class="img-fluid w-100" id="main-product-image">
+                    </div>
+                    @if (Model.ProductImages.Count > 1)
+                    {
+                        <div class="gallery-thumbnails d-flex gap-2">
+                            @foreach (var image in Model.ProductImages)
+                            {
+                                <div class="thumbnail-item flex-fill">
+                                    <img src="@image.ImageUrl" class="img-fluid" alt="Thumbnail">
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-5" data-aos="fade-left" data-aos-delay="100">
+                <div class="product-info">
+                    <a href="#" class="category-link">@Model.Category.Name</a>
+                    <h2 class="mt-2">@Model.Name</h2>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="star-rating-display me-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="fas fa-star @(i <= averageRating ? "filled" : "")"></i>
+                            }
+                        </div>
+                        <span class="text-muted">(@totalRatings مراجعات)</span>
+                    </div>
+                    <p class="text-dark">@Model.Description</p>
+
+                    <div class="price-section my-4">
+                        <span class="current-price">@Model.Price.ToString("C")</span>
+                        @if (Model.OldPrice.HasValue)
+                        {
+                            <span class="old-price">@Model.OldPrice.Value.ToString("C")</span>
+                        }
+                    </div>
+
+                    @if (hasOffer)
+                    {
+                        <div class="offer-ends-section">
+                            <p class="offer-ends-text">ينتهي العرض خلال:</p>
+                            <div class="countdown-timer-details" data-end-date="@Model.OfferEndDate.Value.ToString("o")"></div>
+                        </div>
+                    }
+
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post" class="add-to-cart-form mt-4">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <div class="row g-2">
+                            <div class="col-8">
+                                <button type="button" class="action-btn wishlist-btn" data-product-id="@Model.Id" title="إضافة للمفضلة"><i class="bi bi-heart"></i></button>
+                            </div>
+                            <div class="col-8">
+                                <button type="submit" class="btn-main w-100 btn-add-to-cart">أضف إلى السلة</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Review Section -->
+<div class="reviews-section section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="section-header">
+                    <h2>آراء العملاء</h2>
+                </div>
+
+                <!-- Reviews List -->
+                <div class="reviews-list mb-5">
+                    @if (approvedReviews.Any())
+                    {
+                        foreach (var review in approvedReviews)
+                        {
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <h5 class="reviewer-name">@review.ReviewerName</h5>
+                                    <div class="star-rating-display">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="fas fa-star @(i <= review.Rating ? "filled" : "")"></i>
+                                        }
+                                    </div>
+                                </div>
+                                <p class="review-comment">"@review.Comment"</p>
+                                <small class="review-date text-muted">@review.ReviewDate.ToShortDateString()</small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted">لا توجد مراجعات لهذا المنتج حتى الآن. كن أول من يكتب مراجعة!</p>
+                    }
+                </div>
+
+                <!-- Add Review Form -->
+                <div class="add-review-form">
+                    <h4>أضف مراجعتك</h4>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <form asp-action="SubmitReview" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="ProductId" value="@Model.Id" />
+                            <div class="mb-3">
+                                <label class="form-label">تقييمك للمنتج</label>
+                                <div class="star-rating-input">
+                                    <i class="bi bi-star" data-value="1"></i>
+                                    <i class="bi bi-star" data-value="2"></i>
+                                    <i class="bi bi-star" data-value="3"></i>
+                                    <i class="bi bi-star" data-value="4"></i>
+                                    <i class="bi bi-star" data-value="5"></i>
+                                </div>
+                                <input type="hidden" name="Rating" id="rating-value" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="Comment" class="form-label">اكتب تعليقك هنا</label>
+                                <textarea name="Comment" class="form-control" rows="4" required placeholder="ما رأيك في المنتج؟"></textarea>
+                            </div>
+                            <button type="submit" class="btn-main">إرسال المراجعة</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-light text-center border">
+                            يجب عليك <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="fw-bold">تسجيل الدخول</a> أولاً لإضافة مراجعة.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

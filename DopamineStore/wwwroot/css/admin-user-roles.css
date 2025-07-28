@@ -1,0 +1,39 @@
+﻿.user-roles-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+    border: none;
+}
+
+    .user-roles-card .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .user-roles-card .card-header h5 {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .user-roles-card .card-header .user-email {
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+.role-selection-item {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+    .role-selection-item:last-child {
+        border-bottom: none;
+    }
+
+    .role-selection-item .form-check-input {
+        width: 2.5em;
+        height: 1.25em;
+    }
+
+    .role-selection-item .form-check-label {
+        font-weight: 700;
+    }

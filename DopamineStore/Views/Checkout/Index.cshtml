@@ -1,0 +1,107 @@
+﻿@model CheckoutViewModel
+@{
+    ViewData["Title"] = "إتمام الطلب";
+}
+
+<div class="checkout-page section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>إتمام الطلب</h2>
+        </div>
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+        }
+        <form asp-action="PlaceOrder" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row gy-5">
+                <!-- Shipping & Payment Details -->
+                <div class="col-lg-7">
+                    <div class="checkout-form-card">
+                        <h4>بيانات الشحن</h4>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-12">
+                                <input asp-for="CustomerName" class="form-control" placeholder="الاسم الكامل">
+                                <span asp-validation-for="CustomerName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="رقم الهاتف">
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <select asp-for="ShippingZoneId" asp-items="Model.ShippingZones" class="form-select" id="shippingZoneSelect">
+                                    <option value="">اختر منطقة الشحن</option>
+                                </select>
+                                <span asp-validation-for="ShippingZoneId" class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <input asp-for="ShippingAddress" class="form-control" placeholder="العنوان بالتفصيل">
+                                <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkout-form-card mt-4">
+                        <h4>طريقة الدفع</h4>
+                        <div class="payment-methods mt-3">
+                            <div class="payment-option">
+                                <input type="radio" id="cod" name="PaymentMethod" value="CashOnDelivery" checked>
+                                <label for="cod">
+                                    <i class="bi bi-truck"></i>
+                                    <span>الدفع عند الاستلام</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="instapay" name="PaymentMethod" value="Instapay">
+                                <label for="instapay">
+                                    <i class="bi bi-qr-code"></i>
+                                    <span>انستا باي (Instapay)</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="wallet" name="PaymentMethod" value="Wallet">
+                                <label for="wallet">
+                                    <i class="bi bi-wallet2"></i>
+                                    <span>محفظة إلكترونية</span>
+                                </label>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-5">
+                    <div class="order-summary-card">
+                        <h4>ملخص طلبك</h4>
+                        <ul class="list-group list-group-flush mt-3">
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <li class="list-group-item d-flex justify-content-between bg-transparent">
+                                    <span>@item.Product.Name x @item.Quantity</span>
+                                    <span>@((item.Product.Price * item.Quantity).ToString("C"))</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between bg-transparent mt-3">
+                                <span>الإجمالي الفرعي</span>
+                                <span id="subtotal" data-value="@Model.SubTotal">@Model.SubTotal.ToString("C")</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-transparent">
+                                <span>مصاريف الشحن</span>
+                                <span id="shippingCost">--</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between fw-bold h5 bg-transparent mt-3 total-line">
+                                <span>الإجمالي النهائي</span>
+                                <span id="totalAmount">@Model.SubTotal.ToString("C")</span>
+                            </li>
+                        </ul>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn-main">تأكيد الطلب</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

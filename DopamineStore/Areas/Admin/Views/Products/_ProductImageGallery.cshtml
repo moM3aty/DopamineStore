@@ -1,0 +1,33 @@
+﻿@model DopamineStore.Models.Product
+
+<div class="row gx-2 gy-2">
+    @if (Model.ProductImages != null && Model.ProductImages.Any())
+    {
+        foreach (var image in Model.ProductImages.OrderByDescending(i => i.ImageUrl == Model.ImageUrl))
+        {
+            bool isMain = Model.ImageUrl == image.ImageUrl;
+            <div class="col-6 col-md-4 col-lg-3" id="image-container-@image.Id">
+                <div class="image-gallery-item @(isMain ? "main-image" : "")">
+                    <img src="@Url.Content("~" + image.ImageUrl)" class="img-fluid" />
+                    <div class="image-actions">
+                        <button type="button" class="btn btn-sm btn-action-icon delete-image-btn" data-image-id="@image.Id" title="حذف الصورة"><i class="fas fa-trash"></i></button>
+                        @if (!isMain)
+                        {
+                            <button type="button" class="btn btn-sm btn-action-icon set-main-image-btn" data-image-id="@image.Id" title="تعيين كصورة رئيسية"><i class="far fa-star"></i></button>
+                        }
+                        else
+                        {
+                            <span class="btn btn-sm btn-action-icon main-image-star" title="الصورة الرئيسية"><i class="fas fa-star"></i></span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <p class="text-muted text-center p-4">لا توجد صور لهذا المنتج حتى الآن.</p>
+        </div>
+    }
+</div>

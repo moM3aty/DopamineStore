@@ -1,0 +1,38 @@
+﻿@model UserRolesViewModel
+@{
+    ViewData["Title"] = "إدارة صلاحيات المستخدم";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Index" asp-controller="Customers" class="btn btn-outline-secondary">العودة للعملاء</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <form asp-action="Update" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="UserId" />
+            <div class="user-roles-card">
+                <div class="card-header text-center">
+                    <h5>@Model.UserName</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    @for (int i = 0; i < Model.Roles.Count; i++)
+                    {
+                        <div class="list-group-item role-selection-item">
+                            <div class="form-check form-switch">
+                                <input type="hidden" asp-for="Roles[i].RoleName" />
+                                <input asp-for="Roles[i].IsSelected" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="Roles_@(i)__IsSelected">@Model.Roles[i].RoleName</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer text-end">
+                    <button type="submit" class="btn btn-add-new">حفظ التغييرات</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

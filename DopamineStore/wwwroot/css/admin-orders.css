@@ -1,0 +1,205 @@
+﻿
+.order-table-card {
+    background-color: var(--admin-white-bg, #fff);
+    border-radius: 16px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+    border: none;
+    overflow: hidden;
+}
+
+    .order-table-card thead th {
+        background-color: var(--admin-light-bg, #f9fafb);
+        color: var(--admin-text-light, #6B7280);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+.order-row {
+    transition: all 0.2s ease-in-out;
+}
+
+    .order-row:hover {
+        background-color: var(--admin-light-bg, #f9fafb) !important;
+        transform: scale(1.01);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.5em 1em;
+    font-weight: 700;
+}
+
+.status-قيد-المراجعة {
+    background-color: #FEF3C7 !important;
+    color: #92400E !important;
+}
+
+.status-تم-الشحن {
+    background-color: #DBEAFE !important;
+    color: #1E40AF !important;
+}
+
+.status-تم-التسليم {
+    background-color: #D1FAE5 !important;
+    color: #065F46 !important;
+}
+
+.status-ملغي {
+    background-color: #F3F4F6 !important;
+    color: #4B5563 !important;
+}
+
+.btn-view-details {
+    background-color: var(--admin-white-bg, #fff);
+    border: 1px solid var(--admin-border-color, #e5e7eb);
+    color: var(--admin-text-light, #6B7280);
+    font-weight: 700;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+    .btn-view-details:hover {
+        background-color: var(--admin-light-bg, #f9fafb);
+        color: var(--admin-text-dark, #1F2937);
+        transform: scale(1.05);
+    }
+
+/* Order Details Page */
+.info-list {
+    list-style: none;
+    padding: 0;
+}
+
+    .info-list li {
+        display: flex;
+        align-items: flex-start;
+        padding: 0.75rem 0;
+        color: var(--admin-text-light, #6B7280);
+        border-bottom: 1px solid var(--admin-border-color, #e5e7eb);
+    }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .info-list li strong {
+            color: var(--admin-text-dark, #1F2937);
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+    .info-list i {
+        color: var(--admin-primary-color, #A64B63);
+        width: 20px;
+        text-align: center;
+        margin-left: 10px;
+    }
+
+.order-details-table tfoot {
+    border-top: 2px solid var(--admin-text-dark, #1F2937);
+}
+
+.order-details-table .product-name {
+    font-weight: 700;
+}
+
+.order-history-table .table {
+    margin-bottom: 0;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.order-history-table thead th {
+    background-color: #fce4ec;
+    color: #d63384;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border: none;
+}
+
+.order-history-table tbody tr {
+    transition: all 0.2s ease-in-out;
+    border-bottom: 1px solid var(--border-color, #F4E1E6);
+}
+
+    .order-history-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .order-history-table tbody tr:hover {
+        background-color: var(--light-bg, #f9fafb);
+    }
+
+.order-history-table .table td {
+    vertical-align: middle;
+    color: #444;
+}
+
+.order-id {
+    font-weight: bold;
+    color: #d63384;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.5em 1em;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background-color: #ffe0e9;
+    color: #d63384;
+}
+
+.status-completed {
+    background-color: #e0f7f1;
+    color: #28a745;
+}
+
+.status-cancelled {
+    background-color: #fdecea;
+    color: #dc3545;
+}
+
+.btn-view-details {
+    background-color: #d63384;
+    color: white;
+    border: none;
+    font-weight: 700;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+    .btn-view-details:hover {
+        background-color: #b02a6c;
+    }
+
+.empty-wishlist-container {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+    .empty-wishlist-container .icon {
+        font-size: 5rem;
+        color: var(--accent-color, #F4E1E6);
+    }
+
+    .empty-wishlist-container h3 {
+        font-size: 1.5rem;
+        margin-top: 1.5rem;
+        color: var(--text-dark, #594A4E);
+    }
+
+    .empty-wishlist-container p {
+        color: var(--text-light, #8C7F84);
+        max-width: 400px;
+        margin: 0.5rem auto 1.5rem auto;
+    }

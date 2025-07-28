@@ -1,0 +1,32 @@
+﻿
+.toast-notification {
+    position: fixed;
+    top: 20px; 
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    border-radius: 50px;
+    background-color: #333;
+    color: white;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s, top 0.5s; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+    .toast-notification.show {
+        opacity: 1;
+        visibility: visible;
+        top: 40px; 
+    }
+
+    .toast-notification.success {
+        background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    }
+
+    .toast-notification.error {
+        background: #e74c3c;
+    }

@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title> دوبامين</title>
+    <link href="~/img/logo.png" rel="icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Hayah&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Site Styles -->
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/css/cart-and-nav.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/product-card.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/css/featured-product.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/special-offers.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/testimonials.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/product-details.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/cart.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/wishlist.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/portfolio-filter.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/home-sections.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/footer.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/shop.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/contact.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/toast.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/courses-section.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/profile.css" rel="stylesheet" asp-append-version="true" />
+
+</head>
+<body>
+    <form id="__AjaxAntiForgeryForm" action="#" method="post">@Html.AntiForgeryToken()</form>
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+            <h1 class="logo">
+                <a asp-controller="Home" asp-action="Index">دوبامين</a>
+            </h1>
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="Index" asp-fragment="hero">الرئيسية</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="Index" asp-fragment="about">عنا</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="Index" asp-fragment="courses">كورساتنا</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="Index" asp-fragment="Product">المنتجات</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="Index" asp-fragment="contact">تواصل معنا</a></li>
+                    <partial name="_LoginPartial" />
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+            <div class="cart-icon-wrapper">
+                <button class="cart-icon-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#slideCart">
+                    <i class="bi bi-bag"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        @RenderBody()
+    </main>
+    <footer id="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-contact">
+                            <h3>دوبامين</h3>
+                            <p>
+                                المروه <br>
+                                بورسعيد<br>
+                                مصر <br><br>
+                                <strong>الهاتف:</strong> +20 123 456 7890<br>
+                                <strong>البريد الإلكتروني:</strong> dopaminesalmaatef@gmail.com<br>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6 footer-links">
+                        <h4>روابط سريعة</h4>
+                        <ul>
+                            <li><a asp-controller="Home" asp-action="Index" asp-fragment="hero">الرئيسية</a></li>
+                            <li><a asp-controller="Home" asp-action="Index" asp-fragment="about">عن المتجر</a></li>
+                            <li><a asp-controller="Home" asp-action="Index" asp-fragment="Product">المنتجات</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 footer-links">
+                        <h4>خدماتنا</h4>
+                        <ul>
+                            <li><a asp-controller="Home" asp-action="Index" asp-fragment="courses">الكورسات</a></li>
+                            <li><a href="#">تصاميم خاصة</a></li>
+                            <li><a href="#">هدايا</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <h4>تابعنا</h4>
+                        <div class="social-links mt-3">
+                            <a href="https://www.facebook.com/Dopamine-102285209514446/" target="_blank" class="facebook"><i class="bi bi-facebook"></i></a>
+                            <a href="https://www.instagram.com/dopamine.salmaatef?igsh=MXNiMmQyanE0bHQzMA==" target="_blank" class="instagram"><i class="bi bi-instagram"></i></a>
+                            <a href="https://www.tiktok.com/@@dopamine.salmaatef?_t=8bWoz0hMg4b&_r=1" target="_blank" class="tiktok"><i class="bi bi-tiktok"></i></a>
+                            <a href="https://www.facebook.com/groups/335406510801376/?ref=share" target="_blank" class="facebook-group"><i class="bi bi-people-fill"></i></a>
+                            <a href="https://wa.me/201202654696" target="_blank" class="whatsapp"><i class="bi bi-whatsapp"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container footer-bottom clearfix">
+            <div class="copyright">
+                &copy; حقوق النشر <strong><span>دوبامين</span></strong>. كل الحقوق محفوظة
+            </div>
+        </div>
+    </footer>
+    
+    <div class="offcanvas offcanvas-start slide-cart" tabindex="-1" id="slideCart">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">سلة التسوق</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body" id="slide-cart-body">
+        </div>
+    </div>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <div id="preloader"></div>
+
+    <!-- Add to Cart Quantity Modal -->
+    <div class="modal fade" id="quantityModal" tabindex="-1" aria-labelledby="quantityModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="addToCartModalForm" asp-controller="Cart" asp-action="AddToCart" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="modalProductIdInput" name="productId" value="">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-white" id="quantityModalLabel">تحديد الكمية</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>الرجاء إدخال الكمية المطلوبة:</p>
+                        <input type="number" id="modalQuantityInput" name="quantity" class="form-control" value="1" min="1">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary" id="confirmAddToCartBtn">تأكيد الإضافة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <div id="preloader"></div>
+    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

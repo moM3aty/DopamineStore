@@ -1,0 +1,80 @@
+﻿@model IEnumerable<DopamineStore.Models.Product>
+@{
+    ViewData["Title"] = "إدارة المنتجات";
+}
+
+<div class="product-management-header">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-add-new"><i class="fas fa-plus me-2"></i>إضافة منتج جديد</a>
+</div>
+
+<!-- Filter Card -->
+<div class="filter-card mb-4">
+    <form asp-action="Index" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label for="searchString" class="form-label">البحث بالاسم</label>
+                <input type="text" class="form-control" name="searchString" id="searchString" value="@ViewData["CurrentFilter"]" placeholder="اكتب اسم المنتج...">
+            </div>
+            <div class="col-md-5">
+                <label for="categoryId" class="form-label">الفلترة بالقسم</label>
+                <select name="categoryId" id="categoryId" class="form-select" asp-items="ViewBag.Categories">
+                    <option value="">كل الأقسام</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>تصفية</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="product-table-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="p-3">المنتج</th>
+                    <th class="p-3">القسم</th>
+                    <th class="p-3">السعر</th>
+                    <th class="p-3">الكمية</th>
+                    <th class="p-3">الحالة</th>
+                    <th class="p-3 text-end">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="p-3">
+                            <div class="product-cell">
+                                <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://placehold.co/100x100/F4E1E6/A64B63?text=P" : item.ImageUrl)" />
+                                <span class="product-name">@item.Name</span>
+                            </div>
+                        </td>
+                        <td class="p-3">@item.Category?.Name</td>
+                        <td class="p-3 price-cell">
+                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                            {
+                                <span class="old-price">@item.OldPrice.Value.ToString("C")</span>
+                            }
+                            <span class="current-price">@item.Price.ToString("C")</span>
+                        </td>
+                        <td class="p-3">@item.StockQuantity</td>
+                        <td class="p-3">
+                            @if (item.IsFeatured)
+                            {
+                                <span class="badge bg-info text-dark"><i class="fas fa-star me-1"></i>مميز</span>
+                            }
+                        </td>
+                        <td class="p-3 text-end action-buttons">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="تعديل"><i class="fas fa-pencil-alt"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

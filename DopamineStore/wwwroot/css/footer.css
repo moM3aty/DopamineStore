@@ -1,0 +1,102 @@
+﻿
+#footer {
+    background: var(--light-bg);
+    padding: 60px 0 30px 0;
+    font-size: 14px;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-top {
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.footer-contact h3 {
+    font-size: 2rem;
+    font-family: var(--font-brand);
+    color: var(--primary-color);
+}
+
+.footer-contact p {
+    font-size: 14px;
+    line-height: 24px;
+    margin-bottom: 0;
+    font-family: var(--font-main);
+    color: var(--text-light);
+}
+
+.footer-links {
+    margin-bottom: 30px;
+}
+
+    .footer-links h4 {
+        font-size: 16px;
+        font-weight: bold;
+        color: var(--text-dark);
+        position: relative;
+        padding-bottom: 12px;
+        font-family: var(--font-main);
+    }
+
+    .footer-links ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .footer-links ul i {
+            padding-right: 2px;
+            color: var(--secondary-color);
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .footer-links ul li {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+            .footer-links ul li:first-child {
+                padding-top: 0;
+            }
+
+        .footer-links ul a {
+            color: var(--text-light);
+            transition: 0.3s;
+            display: inline-block;
+            line-height: 1;
+        }
+
+            .footer-links ul a:hover {
+                color: var(--primary-color);
+            }
+
+.social-links a {
+    font-size: 18px;
+    display: inline-block;
+    background: var(--accent-color);
+    color: var(--primary-color);
+    line-height: 1;
+    padding: 8px 0;
+    margin-right: 4px;
+    border-radius: 50%;
+    text-align: center;
+    width: 36px;
+    height: 36px;
+    transition: 0.3s;
+}
+
+    .social-links a:hover {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+.footer-bottom {
+    padding-top: 30px;
+    text-align: center;
+}
+
+.copyright {
+    margin: 0;
+}

@@ -1,0 +1,145 @@
+﻿@model IEnumerable<CartItem>
+@{
+    ViewData["Title"] = "سلة التسوق";
+    decimal total = Model.Any() ? Model.Sum(item => item.Quantity * item.Product.Price) : 0;
+}
+
+<link href="~/css/cart-page.css" rel="stylesheet" asp-append-version="true" />
+
+<div class="cart-page section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>سلة التسوق الخاصة بك</h2>
+        </div>
+        <div class="row gy-5">
+            <div class="col-lg-8" id="cart-items-container">
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="cart-item" id="cart-item-@item.Id">
+                            <div class="cart-item-img me-4">
+                                <img src="@(string.IsNullOrEmpty(item.Product.ImageUrl) ? "https://placehold.co/200x200/F4E1E6/A64B63?text=Item" : item.Product.ImageUrl)" alt="@item.Product.Name">
+                            </div>
+                            <div class="cart-item-details">
+                                <h5>@item.Product.Name</h5>
+                                <p class="text-light mb-1">السعر: @item.Product.Price.ToString("C")</p>
+                            </div>
+                            <div class="mx-4">
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn quantity-minus" data-item-id="@item.Id">-</button>
+                                    <input type="text" class="quantity-input" value="@item.Quantity" readonly>
+                                    <button class="quantity-btn quantity-plus" data-item-id="@item.Id">+</button>
+                                </div>
+                            </div>
+                            <h5 class="mx-4 item-total" id="item-total-@item.Id">@((item.Quantity * item.Product.Price).ToString("C"))</h5>
+                            <button class="btn btn-sm btn-remove" data-item-id="@item.Id" title="إزالة المنتج">&times;</button>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-5" id="empty-cart-message">
+                        <p class="lead">سلتك فارغة حالياً.</p>
+                        <a asp-controller="Home" asp-action="Index" class="btn-main">ابدأ التسوق</a>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h4>ملخص الطلب</h4>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>الإجمالي الفرعي</span>
+                        <span id="cart-subtotal">@total.ToString("C")</span>
+                    </div>
+                    <div class="d-flex justify-content-between fw-bold h5">
+                        <span>الإجمالي النهائي</span>
+                        <span id="cart-total">@total.ToString("C")</span>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <a asp-controller="Checkout" asp-action="Index" class="btn-main" id="checkout-btn" style="@(Model.Any() ? "" : "display:none;")">التقدم لإتمام الطلب</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Function to show toast notifications
+            function showToast(message, type = 'error') {
+                let toastContainer = $('#toast-container');
+                if (toastContainer.length === 0) {
+                    $('body').append('<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1056"></div>');
+                    toastContainer = $('#toast-container');
+                }
+                const bgColor = type === 'error' ? 'bg-danger' : 'bg-success';
+                const iconClass = type === 'error' ? 'bi-x-circle-fill' : 'bi-check-circle-fill';
+                const toastHtml = `
+                    <div class="toast align-items-center text-white ${bgColor} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body d-flex align-items-center">
+                                <i class="bi ${iconClass} me-2"></i>
+                                ${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>`;
+                var toastElement = $(toastHtml);
+                toastContainer.append(toastElement);
+                var bsToast = new bootstrap.Toast(toastElement[0], { delay: 4000 });
+                bsToast.show();
+            }
+
+            function updateCartItem(itemId, newQuantity) {
+                $.post('/Cart/UpdateQuantity', { id: itemId, quantity: newQuantity }, function(response) {
+                    if (response.success) {
+                        if (response.itemRemoved) {
+                            $('#cart-item-' + itemId).fadeOut(300, function() { $(this).remove(); });
+                        } else {
+                            $('#cart-item-' + itemId).find('.quantity-input').val(response.newQuantity);
+                            $('#item-total-' + itemId).text(response.itemTotal);
+                        }
+
+                        $('#cart-subtotal').text(response.cartTotal);
+                        $('#cart-total').text(response.cartTotal);
+                        $('#cart-badge').text(response.cartCount);
+
+                        if(response.cartCount === 0) {
+                            $('#checkout-btn').fadeOut();
+                            if($('#empty-cart-message').length === 0) {
+                                 $('#cart-items-container').html('<div class="text-center py-5" id="empty-cart-message"><p class="lead">سلتك فارغة حالياً.</p><a href="/Home/Index" class="btn-main">ابدأ التسوق</a></div>');
+                            }
+                        }
+                    } else {
+                        showToast(response.message, 'error');
+                    }
+                });
+            }
+
+            $('#cart-items-container').on('click', '.quantity-plus', function() {
+                var itemId = $(this).data('item-id');
+                var input = $(this).siblings('.quantity-input');
+                var currentQuantity = parseInt(input.val());
+                updateCartItem(itemId, currentQuantity + 1);
+            });
+
+            $('#cart-items-container').on('click', '.quantity-minus', function() {
+                var itemId = $(this).data('item-id');
+                var input = $(this).siblings('.quantity-input');
+                var currentQuantity = parseInt(input.val());
+                updateCartItem(itemId, currentQuantity - 1);
+            });
+
+            $('#cart-items-container').on('click', '.btn-remove', function() {
+                var itemId = $(this).data('item-id');
+                if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                    updateCartItem(itemId, 0);
+                }
+            });
+        });
+    </script>
+}

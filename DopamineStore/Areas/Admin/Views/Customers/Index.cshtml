@@ -1,0 +1,55 @@
+﻿@model IEnumerable<CustomerViewModel>
+@{
+    ViewData["Title"] = "إدارة العملاء";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<!-- Filter Card -->
+<div class="content-card filter-card mb-4">
+    <form asp-action="Index" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label for="searchString" class="form-label">البحث بالاسم أو البريد الإلكتروني</label>
+                <input type="text" class="form-control" name="searchString" id="searchString" value="@(ViewData["CurrentFilter"])" placeholder="اكتب اسم العميل أو بريده الإلكتروني...">
+            </div>
+            <div class="col-md-5">
+                <label for="roleName" class="form-label">الفلترة بالصلاحية</label>
+                <select name="roleName" class="form-select" asp-items="@(ViewData["Roles"] as SelectList)">
+                    <option value="">كل الصلاحيات</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>تصفية</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row gy-4">
+    @foreach (var customer in Model)
+    {
+        <div class="col-lg-4 col-md-6">
+            <div class="customer-card">
+                <div class="customer-card-header">
+                    <div class="customer-avatar">
+                        @customer.Name.FirstOrDefault()
+                    </div>
+                    <div class="customer-info">
+                        <h5 class="customer-name">@customer.Name</h5>
+                        <span class="customer-email">@customer.Email</span>
+                    </div>
+                </div>
+                <div class="customer-card-body">
+                    <div class="stat-item">
+                        <span class="stat-value">@string.Join(", ", customer.Roles)</span>
+                        <span class="stat-label">الصلاحيات</span>
+                    </div>
+                    <a asp-action="Index" asp-controller="UserRoles" asp-route-userId="@customer.UserId" class="btn btn-sm btn-outline-primary">إدارة الصلاحيات</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

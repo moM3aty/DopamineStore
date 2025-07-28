@@ -1,0 +1,79 @@
+﻿
+.contact .info-container {
+    background: var(--primary-color, #A64B63);
+    height: 100%;
+    padding: 20px;
+    border-radius: var(--border-radius, 16px);
+    box-shadow: var(--box-shadow, 0 10px 40px rgba(166, 75, 99, 0.1));
+}
+
+.contact .info-item {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    color: var(--white-text, #fff);
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+    .contact .info-item:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+    }
+
+    .contact .info-item i {
+        font-size: 24px;
+        width: 44px;
+        height: 44px;
+        background-color: rgba(255, 255, 255, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50px;
+        transition: all 0.3s ease-in-out;
+        margin-left: 15px; /* For RTL */
+    }
+
+    .contact .info-item h4 {
+        padding: 0;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--white-text, #fff);
+        font-family: var(--font-main, 'Tajawal', sans-serif);
+    }
+
+    .contact .info-item p {
+        padding: 0;
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.6;
+        font-family: var(--font-brand);
+    }
+
+    .contact .info-item a {
+        color: var(--white-text, #fff);
+        text-decoration: none;
+    }
+
+.contact .php-email-form {
+    width: 100%;
+    background: var(--white-bg, #fff);
+    box-shadow: var(--box-shadow, 0 10px 40px rgba(166, 75, 99, 0.1));
+    padding: 30px;
+    border-radius: var(--border-radius, 16px);
+}
+
+    .contact .php-email-form .form-control {
+        border-radius: 8px;
+        border: 1px solid var(--border-color, #F4E1E6);
+        padding: 0.75rem 1rem;
+    }
+
+        .contact .php-email-form .form-control:focus {
+            border-color: var(--primary-color, #A64B63);
+            box-shadow: 0 0 0 3px var(--accent-color, #F4E1E6);
+        }

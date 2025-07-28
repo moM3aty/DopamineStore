@@ -1,0 +1,70 @@
+﻿@model ShopViewModel
+@{
+    ViewData["Title"] = "المتجر";
+}
+
+<div class="shop-page section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>استكشف منتجاتنا</h2>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="shop-sidebar">
+                    <h3 class="sidebar-title">الأقسام</h3>
+                    <ul class="list-group category-list">
+                        <a asp-action="Index" asp-controller="Shop" class="list-group-item @(Model.CurrentCategory == null ? "active" : "")">
+                            كل المنتجات
+                        </a>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <a asp-action="Index" asp-controller="Shop" asp-route-categoryId="@category.Id" class="list-group-item @(Model.CurrentCategory == category.Id ? "active" : "")">
+                                @category.Name
+                            </a>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Search Bar -->
+                <div class="shop-search mb-4">
+                    <form asp-action="Index" asp-controller="Shop" method="get">
+                        <div class="input-group">
+                            <input type="text" name="searchString" class="form-control" placeholder="ابحث عن منتج..." value="@Model.CurrentSearch">
+                            <button class="btn btn-main" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="row gy-4">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="col-lg-4 col-md-6">
+                            @await Html.PartialAsync("_ProductCard", product)
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" asp-controller="Shop"
+                                   asp-route-page="@i"
+                                   asp-route-searchString="@Model.CurrentSearch"
+                                   asp-route-categoryId="@Model.CurrentCategory">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "تفاصيل الطلب #" + Model.Id;
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="fas fa-arrow-right me-2"></i>العودة للطلبات</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="content-card h-100">
+            <div class="content-card-header">
+                <h5>المنتجات في الطلب</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle order-details-table mb-0">
+                        <thead>
+                            <tr>
+                                <th class="p-3">المنتج</th>
+                                <th class="p-3 text-center">الكمية</th>
+                                <th class="p-3 text-center">سعر الوحدة</th>
+                                <th class="p-3 text-end">الإجمالي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td class="p-3 product-name">@detail.Product.Name</td>
+                                    <td class="p-3 text-center">x @detail.Quantity</td>
+                                    <td class="p-3 text-center">@detail.UnitPrice.ToString("C")</td>
+                                    <td class="p-3 text-end fw-bold">@((detail.Quantity * detail.UnitPrice).ToString("C"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end border-0 p-3"><strong>الإجمالي النهائي للطلب:</strong></td>
+                                <td class="text-end border-0 p-3 h5 text-success"><strong>@Model.TotalAmount.ToString("C")</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="content-card mb-4">
+            <div class="content-card-header">
+                <h5>معلومات العميل</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled info-list">
+                    <li><i class="fas fa-user"></i> <strong>الاسم:</strong> <span>@Model.CustomerName</span></li>
+                    <li><i class="fas fa-envelope"></i> <strong>البريد:</strong> <span>@Model.CustomerEmail</span></li>
+                    <li><i class="fas fa-phone"></i> <strong>الهاتف:</strong> <span>@Model.PhoneNumber</span></li>
+                    <li><i class="fas fa-map-marker-alt"></i> <strong>العنوان:</strong> <span>@Model.ShippingAddress, @Model.City</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="content-card">
+            <div class="content-card-header">
+                <h5>تحديث حالة الطلب</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="UpdateStatus" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="orderId" value="@Model.Id" />
+                    <div class="input-group">
+                        <select name="status" class="form-select">
+                            <option value="قيد الانتظار" selected="@(Model.OrderStatus == "قيد الانتظار")">قيد الانتظار</option>
+                            <option value="قيد المراجعة" selected="@(Model.OrderStatus == "قيد المراجعة")">قيد المراجعة</option>
+                            <option value="تم الشحن" selected="@(Model.OrderStatus == "تم الشحن")">تم الشحن</option>
+                            <option value="تم التسليم" selected="@(Model.OrderStatus == "تم التسليم")">تم التسليم</option>
+                            <option value="ملغي" selected="@(Model.OrderStatus == "ملغي")">ملغي</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

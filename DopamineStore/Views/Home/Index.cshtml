@@ -1,0 +1,276 @@
+﻿@model HomeViewModel
+@{
+    ViewData["Title"] = "Dopamine - فن يروي حكايتك";
+}
+
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+                <h1>صُنعت لتُشعِرك بالسَعادة</h1>
+                <h2>فن يروي حكايتك</h2>
+                <h2>منتجات يدوية مصنوعة بشغف لتضيف لمسة من السعادة ليومك.</h2>
+                <div class="d-flex justify-content-center justify-content-lg-start">
+                    <a href="#Product" class="btn-main scrollto">تصفح المنتجات</a>
+                </div>
+            </div>
+            <div class="col-lg-6 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                <img src="~/img/logo.png" class="img-fluid animated" alt="لوجو دوبامين">
+            </div>
+        </div>
+    </div>
+</section><!-- End Hero -->
+
+<main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about section-bg">
+        <div class="container" data-aos="fade-up">
+            <div class="section-header">
+                <h2>قصتنا</h2>
+                <p>كل قطعة في دوبامين تحمل جزءاً من روحنا. نحن نؤمن بقوة الفن اليدوي في نشر البهجة وصناعة الذكريات.</p>
+            </div>
+            <div class="row gx-5 align-items-center">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+                    <img src="~/img/aboutus.png" class="img-fluid rounded-4 shadow-lg" alt="دوبامين">
+                </div>
+                <div class="col-lg-6 content" data-aos="fade-left" data-aos-delay="100">
+                    <h3>نصنع ما تحب، بحب.</h3>
+                    <p>
+                        منذ البداية، كان هدفنا هو تحويل المواد البسيطة إلى قطع فنية فريدة تلامس القلوب. كل تصميم هو رحلة من الإلهام إلى الإبداع، مصممة خصيصاً لك.
+                    </p>
+                    <ul>
+                        <li><i class="bi bi-check-circle-fill"></i> جودة عالية وتفاصيل دقيقة.</li>
+                        <li><i class="bi bi-check-circle-fill"></i> تصاميم مبتكرة ومخصصة حسب الطلب.</li>
+                        <li><i class="bi bi-check-circle-fill"></i>   ندعم المبتدئين ونوفر لهم الخامات اللازمة ليبدأوا طريقهم بثقة وثبات.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section><!-- End About Section -->
+    <!-- ======= Courses Section ======= -->
+   <section id="courses" class="courses-section">
+    <div class="container" data-aos="fade-up">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-7" data-aos="fade-right" data-aos-delay="100">
+                <div class="content">
+                    <h3>أطلق العنان لإبداعك</h3>
+                    <p class="fst-italic">
+                        انضم إلى ورشة عمل دوبامين لتعليم فنون الـ HandMade واكتشف الفنان بداخلك.
+                    </p>
+                    <ul>
+                        <li><i class="bi bi-palette-fill"></i> تعلم أساسيات وتقنيات متقدمة.</li>
+                        <li><i class="bi bi-magic"></i> اعمل على مشروعك الخاص بإشرافنا.</li>
+                        <li><i class="bi bi-lightbulb-fill"></i> حول شغفك إلى مصدر إلهام.</li>
+                    </ul>
+                <a href="https://wa.me/+201275844735" target="_blank" class="btn-main">انضم للورشة الآن</a>
+            </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left" data-aos-delay="100">
+                <div class="course-image-composition">
+                    <div class="img-1">
+                        <img src="~/img/Course.jpg" alt="[صورة فرش وأدوات رسم]">
+                    </div>
+                    <div class="img-2">
+                        <img src="~/img/Course2.png" alt="[صورة أيادي تعمل بالفخار]">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- End Courses Section -->
+    <!-- ======= Featured Products Section ======= -->
+    @if (Model.FeaturedProducts.Any())
+    {
+        <section id="featured-products" class="featured-products section-bg">
+            <div class="container" data-aos="fade-up">
+                <div class="section-header">
+                    <h2>منتجات مميزة</h2>
+                    <p>قطع اخترناها لك بعناية لتكوني متألقة.</p>
+                </div>
+                <div class="row gy-4">
+                    @foreach (var product in Model.FeaturedProducts)
+                    {
+                        <div class="col-lg-3 col-md-6">
+                            @await Html.PartialAsync("_FeaturedProductCard", product)
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+    <!-- End Featured Products Section -->
+    <!-- ======= Special Offers Section ======= -->
+    @if (Model.SpecialOffers.Any())
+    {
+        <section id="limited-offers" class="limited-offers-section">
+            <div class="container" data-aos="fade-up">
+                <div class="section-header">
+                    <h2>عرض لفترة محدودة</h2>
+                    <p>لا تفوتي فرصة الحصول على هذه القطع الفريدة بأفضل سعر!</p>
+                </div>
+                <div class="row gy-4 justify-content-center">
+                    @foreach (var product in Model.SpecialOffers)
+                    {
+                        <div class="col-lg-4 col-md-6">
+                            <div class="offer-card">
+                                <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? $"https://placehold.co/400x400/F4E1E6/A64B63?text={Uri.EscapeDataString(product.Name)}" : product.ImageUrl)" alt="@product.Name" class="offer-image">
+                                <h3 class="offer-title">@product.Name</h3>
+                                <div class="offer-price-wrap">
+                                    <span class="offer-current-price">@product.Price.ToString("C")</span>
+                                    @if (product.OldPrice.HasValue)
+                                    {
+                                        <span class="offer-old-price">@product.OldPrice.Value.ToString("C")</span>
+                                    }
+                                </div>
+                                <div class="countdown-timer" data-end-date="@product.OfferEndDate.Value.ToString("o")"></div>
+                                <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@product.Id" class="btn-main">اكتشفي العرض</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+    <!-- End Special Offers Section -->
+    <!-- ======= All Products Section ======= -->
+<section id="Product" class="portfolio section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>استكشفي أحدث منتجاتنا</h2>
+        </div>
+
+        @if (Model.Products.Any())
+        {
+            <div class="row">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <ul id="portfolio-flters">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <li data-filter="@category.Id">@category.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row portfolio-container gy-4">
+                @foreach (var (product, index) in Model.Products.Select((value, i) => (value, i)))
+                {
+                    <div data-category="@product.CategoryId" id="portfolio-item-@index" class="col-lg-4 col-md-6 portfolio-item filter-@product.CategoryId">
+                        @await Html.PartialAsync("_ProductCard", product)
+                    </div>
+                }
+            </div>
+
+            <div class="text-center mt-5">
+                <a asp-controller="Shop" asp-action="Index" class="btn-main">عرض جميع المنتجات</a>
+            </div>
+        }
+        else
+        {
+            <p class="text-center">لا توجد منتجات لعرضها حالياً.</p>
+        }
+    </div>
+</section>
+    <!-- End All Products Section -->
+    <!-- ======= Testimonials Section ======= -->
+    @if (Model.Reviews.Any())
+    {
+        <section id="testimonials" class="testimonials">
+            <div class="container" data-aos="fade-up">
+                <div class="section-header">
+                    <h2>ماذا يقولون عنا</h2>
+                </div>
+                <div class="testimonials-slider swiper">
+                    <div class="swiper-wrapper">
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <div class="swiper-slide">
+                                <div class="testimonial-item">
+                                    <p>
+                                        <i class="bi bi-quote quote-icon-left"></i>
+                                        @review.Comment
+                                        <i class="bi bi-quote quote-icon-right"></i>
+                                    </p>
+                                    <h3>@review.ReviewerName</h3>
+                                    <div class="stars">
+                                        @for (int i = 0; i < review.Rating; i++)
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </section>
+    }
+    <!-- End Testimonials Section -->
+    <!-- ======= Contact Section ======= -->
+<section id="contact" class="contact my-5">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>تواصل معنا</h2>
+            <p>نسعد دائمًا بسماع آرائكم واستفساراتكم. لا تترددوا في التواصل معنا.</p>
+        </div>
+        <div class="row gx-lg-5 gy-4">
+            <div class="col-lg-4">
+                <div class="info-container d-flex flex-column align-items-center justify-content-center">
+                    <a href="https://wa.me/201202654696" target="_blank" class="info-item">
+                        <i class="bi bi-whatsapp"></i>
+                        <div>
+                            <h4>عبر الواتساب:</h4>
+                            <p>٠١٢٠٢٦٥٤٦٩٦</p>
+                        </div>
+                    </a><!-- End Info Item -->
+
+                    <a href="tel:+201202654696" class="info-item">
+                        <i class="bi bi-phone"></i>
+                        <div>
+                            <h4>الهاتف:</h4>
+                            <p>٠١٢٠٢٦٥٤٦٩٦ </p>
+                        </div>
+                    </a><!-- End Info Item -->
+
+                    <a href="mailto:dopaminesalmaatef@gmail.com" class="info-item">
+                        <i class="bi bi-envelope"></i>
+                        <div>
+                            <h4>البريد الإلكتروني:</h4>
+                            <p style="font-weight:100">dopaminesalmaatef@gmail.com</p>
+                        </div>
+                    </a><!-- End Info Item -->
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <form id="contact-form-whatsapp" class="php-email-form">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <input type="text" id="Name" class="form-control" placeholder="الاسم" required>
+                        </div>
+                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                            <input type="email" class="form-control" id="Email" placeholder="البريد الإلكتروني" required>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" id="Subject" placeholder="الموضوع" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <textarea class="form-control" id="Message" rows="5" placeholder="الرسالة" required></textarea>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn-main">إرسال عبر واتساب</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- End Contact Section -->
+
+</main>

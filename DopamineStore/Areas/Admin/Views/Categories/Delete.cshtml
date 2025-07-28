@@ -1,0 +1,38 @@
+﻿@model DopamineStore.Models.Category
+@{
+    ViewData["Title"] = "حذف القسم";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+    <div>
+        <h4 class="alert-heading">هل أنت متأكد؟</h4>
+        <p class="mb-0">سيتم حذف هذا القسم نهائياً. قد يؤثر هذا على المنتجات المرتبطة به.</p>
+    </div>
+</div>
+
+<div class="content-card">
+    <div class="card-header bg-transparent">
+        <h5 class="mb-0">تفاصيل القسم المراد حذفه</h5>
+    </div>
+    <div class="card-body p-4">
+        <dl class="row">
+            <dt class="col-sm-3">اسم القسم</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4 text-end">
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <a asp-action="Index" class="btn btn-outline-secondary">إلغاء</a>
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash me-2"></i>تأكيد الحذف
+        </button>
+    </form>
+</div>

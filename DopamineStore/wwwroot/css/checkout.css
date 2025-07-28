@@ -1,0 +1,95 @@
+﻿
+.checkout-page {
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+.checkout-form-card {
+    background: var(--white-bg);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+}
+
+    .checkout-form-card h4 {
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+/* Payment Methods */
+.payment-methods {
+    display: grid;
+    gap: 1rem;
+}
+
+.payment-option {
+    position: relative;
+}
+
+    .payment-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .payment-option label {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .payment-option input[type="radio"]:checked + label {
+        border-color: var(--primary-color);
+        background-color: var(--light-bg);
+        box-shadow: 0 0 10px var(--accent-color);
+    }
+
+    .payment-option label i {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin-left: 1rem;
+    }
+
+    .payment-option label span {
+        font-weight: 600;
+    }
+
+.order-summary-card .total-line {
+    border-top: 2px solid var(--text-dark);
+    padding-top: 1rem;
+}
+
+.payment-instructions-card {
+    background: var(--white-bg);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.payment-title {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.qr-code-img {
+    max-width: 250px;
+    margin-bottom: 1.5rem;
+}
+
+.payment-details {
+    font-size: 1.1rem;
+}
+
+.confirmation-note {
+    margin-top: 1.5rem;
+    font-style: italic;
+    color: var(--text-light);
+}

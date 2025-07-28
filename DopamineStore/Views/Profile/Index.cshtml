@@ -1,0 +1,21 @@
+﻿@model ApplicationUser
+@{
+    ViewData["Title"] = "ملفي الشخصي";
+    Layout = "_ProfileLayout"; 
+}
+
+<h4 class="profile-content-title">البيانات الشخصية</h4>
+<div class="profile-content-card">
+    <form>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">الاسم الكامل</label>
+                <input type="text" class="form-control" value="@Model.FullName" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" class="form-control" value="@Model.Email" readonly>
+            </div>
+        </div>
+    </form>
+</div>

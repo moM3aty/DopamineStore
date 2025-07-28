@@ -1,0 +1,33 @@
+﻿#portfolio-flters {
+    padding: 0;
+    margin: 0 auto 35px auto;
+    list-style: none;
+    text-align: center;
+}
+
+    #portfolio-flters li {
+        cursor: pointer;
+        display: inline-block;
+        padding: 10px 25px;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--text-light);
+        margin: 0 4px 8px 4px;
+        transition: all 0.3s ease-in-out;
+        border-radius: 50px;
+        background: var(--white-bg);
+        border: 1px solid var(--border-color);
+    }
+
+        #portfolio-flters li:hover {
+            color: var(--primary-color);
+            background: var(--accent-color);
+        }
+
+        #portfolio-flters li.filter-active {
+            color: var(--white-text);
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(166, 75, 99, 0.2);
+        }

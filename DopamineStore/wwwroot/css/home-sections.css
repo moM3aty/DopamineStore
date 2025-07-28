@@ -1,0 +1,86 @@
+﻿
+/* --- General Section Styling --- */
+.section-bg {
+    background-color: var(--light-bg);
+}
+
+/* --- About Section --- */
+.about {
+    padding: 80px 0;
+}
+
+    .about .content h3 {
+        color: var(--primary-color);
+        font-size: 32px;
+        font-family: var(--font-brand);
+    }
+
+    .about .content ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .about .content ul li {
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .about .content ul i {
+            color: var(--secondary-color);
+            font-size: 22px;
+            margin-left: 8px; /* For RTL */
+        }
+
+    .about .content p:last-child {
+        margin-bottom: 0;
+    }
+
+/* --- Courses Section --- */
+.courses {
+    padding: 80px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+    .courses .content h3 {
+        font-size: 32px;
+        font-family: var(--font-brand);
+        color: var(--primary-color);
+    }
+
+    .courses .content p.fst-italic {
+        color: var(--text-light);
+    }
+
+    .courses .content ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .courses .content ul li {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .courses .content ul i {
+            font-size: 24px;
+            color: var(--secondary-color);
+            margin-left: 15px; 
+        }
+        .portfolio{
+            padding:50px 0;
+        }
+.portfolio-item {
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    transform: scale(0.95);
+    display: none;
+}
+
+    .portfolio-item.show {
+        display: block !important;
+        opacity: 1;
+        transform: scale(1);
+        transition: all 0.5s ease-in-out;
+    }

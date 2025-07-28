@@ -1,0 +1,86 @@
+﻿
+.courses-section {
+    padding: 80px 0;
+    background: var(--light-bg, #FCF8F9);
+    overflow: hidden;
+}
+
+    .courses-section .content h3 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color, #A64B63);
+    }
+
+    .courses-section .content .fst-italic {
+        color: var(--text-light, #8C7F84);
+        font-family: var(--font-main, 'Tajawal', sans-serif);
+        margin: 1rem 0;
+    }
+
+    .courses-section .content ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .courses-section .content ul li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .courses-section .content ul i {
+            font-size: 24px;
+            color: var(--secondary-color, #D98BA0);
+            margin-left: 10px; /* For RTL */
+        }
+
+    .courses-section .btn-learn-more {
+        margin-top: 1.5rem;
+    }
+
+.course-image-composition {
+    position: relative;
+    height: 450px;
+}
+
+    .course-image-composition .img-1,
+    .course-image-composition .img-2 {
+        position: absolute;
+        border-radius: var(--border-radius, 16px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        transition: all 0.5s ease;
+        overflow: hidden;
+    }
+
+        .course-image-composition .img-1 img,
+        .course-image-composition .img-2 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .course-image-composition .img-1 {
+        width: 70%;
+        height: 70%;
+        top: 0;
+        right: 0;
+        z-index: 2;
+    }
+
+    .course-image-composition .img-2 {
+        width: 65%;
+        height: 65%;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+.courses-section .row:hover .img-1 {
+    transform: translateX(10px) translateY(-10px) rotate(3deg);
+}
+
+.courses-section .row:hover .img-2 {
+    transform: translateX(-10px) translateY(10px) rotate(-3deg);
+}

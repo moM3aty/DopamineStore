@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "إدارة المخزون";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<div class="content-card filter-card mb-4">
+    <form asp-action="Index" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="searchString" class="form-label">البحث بالاسم</label>
+                <input type="text" class="form-control" name="searchString" value="@(ViewData["CurrentFilter"])">
+            </div>
+            <div class="col-md-3">
+                <label for="categoryId" class="form-label">القسم</label>
+                <select name="categoryId" class="form-select" asp-items="@(ViewData["Categories"] as SelectList)">
+                    <option value="">كل الأقسام</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="stockLevel" class="form-label">حالة المخزون</label>
+                <select name="stockLevel" class="form-select" asp-items="@(new SelectList(new[] { new { Value = "in_stock", Text = "متوفر" }, new { Value = "low_stock", Text = "مخزون منخفض" }, new { Value = "out_of_stock", Text = "نفذت الكمية" } }, "Value", "Text", ViewData["CurrentStockLevel"]))">
+                    <option value="">الكل</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>تصفية</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="content-card product-table-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="p-3">المنتج</th>
+                    <th class="p-3">القسم</th>
+                    <th class="p-3">حالة المخزون</th>
+                    <th class="p-3" style="width: 220px;">الكمية الحالية</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="p-3">
+                            <div class="product-cell">
+                                <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://placehold.co/100x100/F4E1E6/A64B63?text=P" : item.ImageUrl)" />
+                                <span class="product-name">@item.Name</span>
+                            </div>
+                        </td>
+                        <td class="p-3">@item.Category?.Name</td>
+                        <td class="p-3">
+                            @if (item.StockQuantity == 0)
+                            {
+                                <span class="stock-status-badge stock-status-out-of-stock"><span class="dot"></span> نفذت الكمية</span>
+                            }
+                            else if (item.StockQuantity <= 5)
+                            {
+                                <span class="stock-status-badge stock-status-low-stock"><span class="dot"></span> مخزون منخفض</span>
+                            }
+                            else
+                            {
+                                <span class="stock-status-badge stock-status-in-stock"><span class="dot"></span> متوفر</span>
+                            }
+                        </td>
+                        <td class="p-3">
+                            <form asp-action="UpdateStock" method="post" class="update-stock-form d-flex">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <div class="input-group">
+                                    <input type="number" class="form-control stock-quantity-input" name="quantity" value="@item.StockQuantity" data-product-id="@item.Id" min="0">
+                                    <button class="btn btn-outline-success btn-update-stock" type="submit" data-product-id="@item.Id" style="display:none;">حفظ</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.stock-quantity-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.closest('.input-group').querySelector('.btn-update-stock').style.display = 'inline-block';
+                });
+            });
+        });
+    </script>
+}

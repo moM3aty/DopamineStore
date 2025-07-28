@@ -1,0 +1,47 @@
+﻿@model Review
+@{
+    ViewData["Title"] = "حذف المراجعة";
+}
+
+<link href="~/css/admin-reviews.css" rel="stylesheet" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+    <div>
+        <h4 class="alert-heading">هل أنت متأكد؟</h4>
+        <p class="mb-0">سيتم حذف هذه المراجعة نهائياً ولا يمكن التراجع عن هذا الإجراء.</p>
+    </div>
+</div>
+
+<div class="content-card review-card">
+    <div class="review-card-header">
+        <div class="review-product-info">
+            <span class="text-muted">المنتج:</span>
+            <a class="product-link" asp-action="Edit" asp-controller="Products" asp-route-id="@Model.ProductId">@Model.Product.Name</a>
+        </div>
+        <div class="review-rating">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <i class="fas fa-star @(i <= Model.Rating ? "" : "text-light")"></i>
+            }
+        </div>
+    </div>
+    <p class="review-comment">"@Model.Comment"</p>
+    <div class="review-card-footer">
+        <span><i class="fas fa-user me-2"></i>@Model.ReviewerName</span>
+        <span><i class="fas fa-calendar-alt me-2"></i>@Model.ReviewDate.ToShortDateString()</span>
+    </div>
+</div>
+
+<div class="mt-4 text-end">
+    <form asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <a asp-action="Index" class="btn btn-outline-secondary">إلغاء</a>
+        <button type="submit" class="btn btn-danger">تأكيد الحذف</button>
+    </form>
+</div>

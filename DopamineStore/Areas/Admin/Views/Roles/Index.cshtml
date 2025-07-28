@@ -1,0 +1,88 @@
+﻿@model IEnumerable<RoleWithUsersViewModel>
+@{
+    ViewData["Title"] = "إدارة الصلاحيات";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="accordion" id="rolesAccordion">
+            @foreach (var role in Model)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-@role.RoleId">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@role.RoleId" aria-expanded="false" aria-controls="collapse-@role.RoleId">
+                            <div class="d-flex justify-content-between w-100 pe-3">
+                                <span class="role-name">@role.RoleName</span>
+                                <span class="badge bg-secondary rounded-pill">@role.UserNames.Count() مستخدم</span>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapse-@role.RoleId" class="accordion-collapse collapse" aria-labelledby="heading-@role.RoleId" data-bs-parent="#rolesAccordion">
+                        <div class="accordion-body">
+                            @if (role.UserNames.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var userName in role.UserNames.Take(5))
+                                    {
+                                        <li class="list-group-item">@userName</li>
+                                    }
+                                    @if (role.UserNames.Count > 5)
+                                    {
+                                        <li class="list-group-item text-muted">و @(role.UserNames.Count - 5) آخرون...</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted">لا يوجد مستخدمين في هذه الصلاحية.</p>
+                            }
+                            <div class="actions-footer">
+                                <a asp-action="Index" asp-controller="Customers" asp-route-roleName="@role.RoleName" class="btn btn-sm btn-outline-primary">إدارة المستخدمين</a>
+                                <form asp-action="Delete" asp-route-id="@role.RoleId" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذه الصلاحية؟');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-delete-role"
+                                            disabled="@(role.RoleName == "Admin" || role.RoleName == "Customer")"
+                                            title="@((role.RoleName == "Admin" || role.RoleName == "Customer") ? "لا يمكن حذف الصلاحيات الأساسية" : "حذف الصلاحية")">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="content-card create-role-card">
+            <div class="content-card-header">
+                <h5>إضافة صلاحية جديدة</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="roleName" class="form-label">اسم الصلاحية</label>
+                        <input type="text" name="roleName" class="form-control" placeholder="مثال: Moderator" required />
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-add-new">إضافة الصلاحية</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

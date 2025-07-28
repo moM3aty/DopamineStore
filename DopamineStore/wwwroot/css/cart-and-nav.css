@@ -1,0 +1,198 @@
+﻿
+/* --- Navbar General --- */
+.navbar .getstarted {
+    background: var(--primary-color);
+    color: var(--white-text);
+    border-radius: 50px;
+    padding: 8px 25px;
+    margin: 0 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+    .navbar .getstarted:hover {
+        background: var(--secondary-color);
+        color: var(--white-text);
+    }
+
+/* --- Profile Dropdown --- */
+.profile-dropdown .nav-link {
+    padding-right: 0;
+}
+
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    color: var(--white-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--font-main);
+}
+
+.profile-dropdown .dropdown-menu {
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
+    padding: 0.5rem 0;
+}
+
+.profile-dropdown .dropdown-item {
+    font-family: var(--font-main);
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .profile-dropdown .dropdown-item i {
+        color: var(--secondary-color);
+        font-size: 1.1rem;
+    }
+
+    .profile-dropdown .dropdown-item:hover {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+    }
+
+        .profile-dropdown .dropdown-item:hover i {
+            color: var(--primary-color);
+        }
+
+/* --- Cart Icon --- */
+.cart-icon-wrapper {
+    margin-right: 15px;
+}
+
+.cart-icon-btn {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-dark);
+    transition: color 0.3s ease;
+}
+
+    .cart-icon-btn:hover {
+        color: var(--primary-color);
+    }
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: var(--primary-color);
+    color: var(--white-text);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    border: 2px solid var(--white-bg);
+}
+
+    .cart-badge.updated {
+        transform: scale(1.3);
+        background-color: var(--secondary-color);
+    }
+
+/* --- Slide-out Cart Panel --- */
+.slide-cart {
+    width: 380px !important;
+    border-left: 1px solid var(--border-color);
+    box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+}
+
+    .slide-cart .offcanvas-header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 1.5rem;
+    }
+
+    .slide-cart .offcanvas-title {
+        font-family: var(--font-brand);
+    }
+
+.slide-cart-body {
+    padding: 0 1.5rem;
+}
+
+.slide-cart-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .slide-cart-item:last-child {
+        border-bottom: none;
+    }
+
+    .slide-cart-item .item-image {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: var(--border-radius);
+        margin-left: 15px;
+    }
+
+    .slide-cart-item .item-details {
+        flex-grow: 1;
+    }
+
+    .slide-cart-item .item-title {
+        font-family: var(--font-main);
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .slide-cart-item .item-meta {
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+
+    .slide-cart-item .item-price {
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+
+    .slide-cart-item .btn-remove {
+        color: var(--text-light);
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        padding: 0.5rem;
+        line-height: 1;
+    }
+
+        .slide-cart-item .btn-remove:hover {
+            color: var(--danger-color, #e74c3c);
+        }
+
+.slide-cart-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--white-bg);
+}
+
+.btn-outline-main {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 700;
+    border-radius: 50px;
+    padding: 12px;
+}
+
+    .btn-outline-main:hover {
+        background: var(--primary-color);
+        color: var(--white-text);
+    }

@@ -1,0 +1,20 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "تم تأكيد الطلب";
+}
+
+<section class="container text-center" style="padding-top: 120px; padding-bottom: 80px;">
+    <div class="section-header">
+        <h2>شكراً لك!</h2>
+        <p class="lead">لقد تم تأكيد طلبك رقم #@Model.Id بنجاح.</p>
+    </div>
+    <div class="details-style p-4 col-md-8 mx-auto">
+        <h3 class="strong-details">ما هي الخطوة التالية؟</h3>
+        <p class="description-paragraph">
+            لقد استلمنا طلبك وسنبدأ في تجهيزه في أقرب وقت.
+            <br />
+            سيتم التواصل معك من خلال فريق التوصيل الخاص بنا.
+        </p>
+    </div>
+    <a asp-controller="Home" asp-action="Index" class="btn-main mt-4">متابعة التسوق</a>
+</section>

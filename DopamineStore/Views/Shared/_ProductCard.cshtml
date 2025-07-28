@@ -1,0 +1,51 @@
+﻿@model Product
+@using System.Globalization
+
+@{
+    int? discountPercentage = null;
+    if (Model.OldPrice.HasValue && Model.OldPrice > Model.Price && Model.OldPrice > 0)
+    {
+        discountPercentage = (int)Math.Round((double)(100 * (Model.OldPrice - Model.Price) / Model.OldPrice));
+    }
+}
+
+<div class="product-card-v2" data-aos="fade-up" data-aos-delay="100">
+    <div class="product-image">
+        <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@Model.Id">
+            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? $"https://placehold.co/400x400/F4E1E6/A64B63?text={Uri.EscapeDataString(Model.Name)}" : Model.ImageUrl)"
+                 alt="@Model.Name"
+                 onerror="this.onerror=null;this.src='https://placehold.co/400x400/F4E1E6/A64B63?text=Image';">
+        </a>
+
+        @if (Model.StockQuantity == 0)
+        {
+            <div class="stock-label out-of-stock">نفذت الكمية</div>
+        }
+
+        @if (discountPercentage.HasValue)
+        {
+            <div class="sale-label">خصم @discountPercentage.Value.ToString("D0", new CultureInfo("ar-EG"))%</div>
+        }
+
+        <div class="product-actions-overlay">
+            <button type="button" class="action-btn wishlist-btn" data-product-id="@Model.Id" title="إضافة للمفضلة"><i class="bi bi-heart"></i></button>
+            <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@Model.Id" class="action-btn" title="عرض التفاصيل"><i class="bi bi-search"></i></a>
+            <button type="button" class="action-btn btn-add-to-cart" data-product-id="@Model.Id" title="إضافة للسلة" @(Model.StockQuantity == 0 ? "disabled" : "")>
+                <i class="bi bi-cart-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="product-info">
+        <span class="product-category">@Model.Category.Name</span>
+        <h3 class="product-title">
+            <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@Model.Id">@Model.Name</a>
+        </h3>
+        <div class="price-wrap">
+            <span class="current-price">@Model.Price.ToString("C")</span>
+            @if (Model.OldPrice.HasValue && Model.OldPrice > Model.Price)
+            {
+                <span class="old-price">@Model.OldPrice.Value.ToString("C")</span>
+            }
+        </div>
+    </div>
+</div>

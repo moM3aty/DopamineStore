@@ -1,0 +1,32 @@
+﻿@model DopamineStore.Models.ShippingZone
+
+@{
+    ViewData["Title"] = "تعديل منطقة الشحن";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="fas fa-arrow-right me-2"></i>العودة للقائمة</a>
+</div>
+
+<div class="content-card">
+    <div class="card-body p-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Cost" class="form-label"></label>
+                <input asp-for="Cost" class="form-control" />
+                <span asp-validation-for="Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4 text-end">
+                <button type="submit" class="btn btn-add-new">حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>

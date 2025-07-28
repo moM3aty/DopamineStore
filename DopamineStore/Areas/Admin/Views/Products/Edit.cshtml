@@ -1,0 +1,174 @@
+﻿@model DopamineStore.Models.Product
+
+@{
+    ViewData["Title"] = "تعديل المنتج";
+}
+
+<div class="product-management-header">
+    <h1>@ViewData["Title"]: @Model.Name</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">العودة للقائمة</a>
+</div>
+
+<div class="product-form-card">
+    <div class="card-header bg-transparent border-0 pt-3">
+        <ul class="nav nav-tabs" id="productTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-pane" type="button" role="tab">بيانات المنتج</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images-pane" type="button" role="tab">إدارة الصور</button>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body p-4">
+        <div class="tab-content" id="productTabContent">
+            <!-- Product Data Pane -->
+            <div class="tab-pane fade show active" id="details-pane" role="tabpanel">
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <h5 class="form-section-title">المعلومات الأساسية</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CategoryId" class="form-label"></label>
+                            <div class="input-group">
+                                <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId" id="category-dropdown"></select>
+                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <h5 class="form-section-title">التسعير والمخزون</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Price" class="form-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="OldPrice" class="form-label"></label>
+                            <input asp-for="OldPrice" class="form-control" placeholder="اتركه فارغاً لعدم وجود خصم" />
+                            <span asp-validation-for="OldPrice" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="OfferEndDate" class="form-label"></label>
+                            <input asp-for="OfferEndDate" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="OfferEndDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StockQuantity" class="form-label"></label>
+                            <input asp-for="StockQuantity" class="form-control" />
+                            <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <h5 class="form-section-title">خيارات إضافية</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" asp-for="IsFeatured">
+                                <label class="form-check-label ms-2" asp-for="IsFeatured"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-4 text-end">
+                        <button type="submit" class="btn btn-add-new">حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Image Management Pane -->
+            <div class="tab-pane fade" id="images-pane" role="tabpanel">
+                <div id="image-gallery-container">
+                    <partial name="_ProductImageGallery" model="Model" />
+                </div>
+                <hr class="my-4" />
+                <form id="image-upload-form" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <h5 class="mb-3 fw-bold">إضافة صور جديدة</h5>
+                    <div class="mb-3">
+                        <input type="file" name="files" id="files" class="form-control" multiple>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-add-new">رفع الصور</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">إضافة قسم جديد</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-error-alert" class="alert alert-danger" style="display:none;"></div>
+                <div class="form-group">
+                    <label for="newCategoryName" class="form-label">اسم القسم</label>
+                    <input type="text" id="newCategoryName" class="form-control" placeholder="اكتب اسم القسم الجديد هنا...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                <button type="button" class="btn btn-primary" id="saveCategoryBtn">
+                    <span id="save-spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                    حفظ القسم
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Image Confirmation Modal -->
+<div class="modal fade" id="deleteImageModal" tabindex="-1" aria-labelledby="deleteImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteImageModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                هل أنت متأكد من حذف هذه الصورة نهائياً؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">تأكيد الحذف</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            initializeProductEditPage(@Model.Id);
+        });
+    </script>
+}

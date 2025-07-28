@@ -1,0 +1,33 @@
+﻿@model Product
+@using System.Globalization
+
+@{
+    int? discountPercentage = null;
+    if (Model.OldPrice.HasValue && Model.OldPrice > 0 && Model.Price < Model.OldPrice)
+    {
+        discountPercentage = (int)Math.Round((double)(100 * (Model.OldPrice - Model.Price) / Model.OldPrice));
+    }
+}
+
+<div class="featured-product-card" data-aos="fade-up" data-aos-delay="100">
+    <div class="featured-product-image">
+        <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@Model.Id">
+            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? $"https://placehold.co/400x500/F4E1E6/A64B63?text={Uri.EscapeDataString(Model.Name)}" : Model.ImageUrl)"
+                 alt="@Model.Name"
+                 onerror="this.onerror=null;this.src='https://placehold.co/400x500/F4E1E6/A64B63?text=Image';">
+        </a>
+
+        @if (discountPercentage.HasValue)
+        {
+            <div class="featured-discount-badge">خصم @discountPercentage.Value.ToString("D0", new CultureInfo("ar-EG"))%</div>
+        }
+
+        <div class="featured-product-overlay">
+            <div>
+                <span class="featured-product-category">@Model.Category.Name</span>
+                <h3 class="featured-product-title">@Model.Name</h3>
+                <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@Model.Id" class="btn-view-details">عرض التفاصيل</a>
+            </div>
+        </div>
+    </div>
+</div>

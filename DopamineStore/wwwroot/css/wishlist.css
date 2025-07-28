@@ -1,0 +1,30 @@
+﻿
+.wishlist-page {
+    background-color: var(--light-bg, #FCF8F9);
+}
+
+    .wishlist-page .product-card-v2 {
+        margin-bottom: 2rem;
+    }
+
+.empty-wishlist-container {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+    .empty-wishlist-container .icon {
+        font-size: 5rem;
+        color: var(--accent-color, #F4E1E6);
+    }
+
+    .empty-wishlist-container h3 {
+        font-size: 1.5rem;
+        margin-top: 1.5rem;
+        color: var(--text-dark, #594A4E);
+    }
+
+    .empty-wishlist-container p {
+        color: var(--text-light, #8C7F84);
+        max-width: 400px;
+        margin: 0.5rem auto 1.5rem auto;
+    }

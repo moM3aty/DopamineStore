@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "إدارة الطلبات";
+}
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<!-- Filter Card -->
+<div class="content-card filter-card mb-4">
+    <form asp-action="Index" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-10">
+                <label for="searchString" class="form-label">البحث برقم الطلب أو اسم العميل</label>
+                <input type="text" class="form-control" name="searchString" id="searchString" value="@ViewData["CurrentFilter"]" placeholder="اكتب رقم الطلب أو اسم العميل...">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>تصفية</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="content-card order-table-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>رقم الطلب</th>
+                    <th>اسم العميل</th>
+                    <th>تاريخ الطلب</th>
+                    <th>الإجمالي</th>
+                    <th>الحالة</th>
+                    <th class="text-end"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="order-row">
+                        <td class="fw-bold">#@item.Id</td>
+                        <td>@item.CustomerName</td>
+                        <td>@item.OrderDate.ToString("yyyy/MM/dd")</td>
+                        <td class="fw-bold text-success">@item.TotalAmount.ToString("C")</td>
+                        <td><span class="badge rounded-pill status-badge status-@item.OrderStatus.ToLower().Replace(" ", "-")">@item.OrderStatus</span></td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-view-details">عرض التفاصيل</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

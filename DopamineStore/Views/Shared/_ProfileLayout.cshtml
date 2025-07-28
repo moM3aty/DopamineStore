@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "_Layout"; 
+}
+
+<div class="profile-page section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>الملف الشخصي</h2>
+        </div>
+        <div class="row gy-4">
+            <div class="col-lg-3">
+                <div class="profile-sidebar">
+                    <div class="nav flex-column nav-pills">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Profile" ? "active" : "")" asp-action="Index" asp-controller="Profile">البيانات الشخصية</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Orders" ? "active" : "")" asp-action="index" asp-controller="Orders">طلباتي</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Wishlist" ? "active" : "")" asp-action="Index" asp-controller="Wishlist">قائمة المفضلة</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ChangePassword" ? "active" : "")" asp-action="ChangePassword" asp-controller="Profile">تغيير كلمة المرور</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}
