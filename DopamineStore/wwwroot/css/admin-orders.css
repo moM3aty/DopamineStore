@@ -1,85 +1,108 @@
-﻿
+﻿/*
+=========================================
+    Admin Orders Page Styles
+=========================================
+*/
+
+/* --- Orders Table Card (Index Page) --- */
 .order-table-card {
-    background-color: var(--admin-white-bg, #fff);
-    border-radius: 16px;
-    box-shadow: 0 4px 25px rgba(0,0,0,0.05);
-    border: none;
+    background-color: var(--white-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
     overflow: hidden;
 }
 
-    .order-table-card thead th {
-        background-color: var(--admin-light-bg, #f9fafb);
-        color: var(--admin-text-light, #6B7280);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.5px;
-    }
-
 .order-row {
-    transition: all 0.2s ease-in-out;
+    transition: all var(--transition-speed) ease;
 }
 
     .order-row:hover {
-        background-color: var(--admin-light-bg, #f9fafb) !important;
-        transform: scale(1.01);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        background-color: var(--light-bg) !important;
+        transform: scale(1.01); /* Subtle lift effect */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.07);
     }
 
+/* --- Status Badges (Used on Index & Details) --- */
 .status-badge {
     font-size: 0.75rem;
     padding: 0.5em 1em;
     font-weight: 700;
+    border-radius: 50px; /* Pill shape */
 }
 
-.status-قيد-المراجعة {
-    background-color: #FEF3C7 !important;
-    color: #92400E !important;
+.status-قيد-الانتظار, .status-قيد-المراجعة {
+    background-color: var(--warning-color) !important;
+    color: var(--text-dark) !important;
 }
 
 .status-تم-الشحن {
-    background-color: #DBEAFE !important;
-    color: #1E40AF !important;
+    background-color: var(--info-color) !important;
+    color: var(--white-text) !important;
 }
 
 .status-تم-التسليم {
-    background-color: #D1FAE5 !important;
-    color: #065F46 !important;
+    background-color: var(--success-color) !important;
+    color: var(--white-text) !important;
 }
 
 .status-ملغي {
-    background-color: #F3F4F6 !important;
-    color: #4B5563 !important;
+    background-color: #e9ecef !important;
+    color: var(--text-light) !important;
 }
 
+/* --- Buttons (Index Page) --- */
 .btn-view-details {
-    background-color: var(--admin-white-bg, #fff);
-    border: 1px solid var(--admin-border-color, #e5e7eb);
-    color: var(--admin-text-light, #6B7280);
+    background-color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    color: var(--primary-color);
     font-weight: 700;
     padding: 0.3rem 0.8rem;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    border-radius: var(--border-radius);
+    transition: all var(--transition-speed) ease;
 }
 
     .btn-view-details:hover {
-        background-color: var(--admin-light-bg, #f9fafb);
-        color: var(--admin-text-dark, #1F2937);
-        transform: scale(1.05);
+        background-color: var(--primary-color);
+        color: var(--white-text);
+        transform: translateY(-2px);
     }
 
-/* Order Details Page */
+
+/*
+=========================================
+    Order Details Page Styles - ENHANCED
+=========================================
+*/
+
+.content-card .content-card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: transparent;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+    .content-card .content-card-header h5 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
 .info-list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
     .info-list li {
         display: flex;
-        align-items: flex-start;
-        padding: 0.75rem 0;
-        color: var(--admin-text-light, #6B7280);
-        border-bottom: 1px solid var(--admin-border-color, #e5e7eb);
+        align-items: center; /* Vertically align icon and text */
+        padding: 0.85rem 0;
+        color: var(--text-light);
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.95rem;
     }
 
         .info-list li:last-child {
@@ -87,119 +110,44 @@
         }
 
         .info-list li strong {
-            color: var(--admin-text-dark, #1F2937);
-            width: 100px;
+            color: var(--text-dark);
+            width: 90px; /* Fixed width for labels */
             flex-shrink: 0;
+            font-weight: 600;
         }
 
     .info-list i {
-        color: var(--admin-primary-color, #A64B63);
+        color: var(--secondary-color);
         width: 20px;
         text-align: center;
-        margin-left: 10px;
+        margin-left: 15px;
+        font-size: 1.1rem;
+    }
+
+    .info-list li span {
+        flex-grow: 1;
     }
 
 .order-details-table tfoot {
-    border-top: 2px solid var(--admin-text-dark, #1F2937);
+    border-top: 2px solid var(--primary-color);
 }
 
 .order-details-table .product-name {
-    font-weight: 700;
+    font-weight: 600;
+    color: var(--text-dark);
 }
 
-.order-history-table .table {
-    margin-bottom: 0;
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
+/* Styling for the update status and actions cards */
+.input-group .form-select {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
-.order-history-table thead th {
-    background-color: #fce4ec;
-    color: #d63384;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    border: none;
+.input-group .btn {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
-
-.order-history-table tbody tr {
-    transition: all 0.2s ease-in-out;
-    border-bottom: 1px solid var(--border-color, #F4E1E6);
-}
-
-    .order-history-table tbody tr:last-child {
-        border-bottom: none;
-    }
-
-    .order-history-table tbody tr:hover {
-        background-color: var(--light-bg, #f9fafb);
-    }
-
-.order-history-table .table td {
-    vertical-align: middle;
-    color: #444;
-}
-
-.order-id {
-    font-weight: bold;
-    color: #d63384;
-}
-
-.status-badge {
-    font-size: 0.75rem;
-    padding: 0.5em 1em;
-    font-weight: 700;
-    text-transform: capitalize;
-}
-
-.status-pending {
-    background-color: #ffe0e9;
-    color: #d63384;
-}
-
-.status-completed {
-    background-color: #e0f7f1;
-    color: #28a745;
-}
-
-.status-cancelled {
-    background-color: #fdecea;
-    color: #dc3545;
-}
-
-.btn-view-details {
-    background-color: #d63384;
-    color: white;
-    border: none;
-    font-weight: 700;
-    padding: 0.3rem 0.8rem;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-}
-
-    .btn-view-details:hover {
-        background-color: #b02a6c;
-    }
-
-.empty-wishlist-container {
-    text-align: center;
-    padding: 4rem 0;
-}
-
-    .empty-wishlist-container .icon {
-        font-size: 5rem;
-        color: var(--accent-color, #F4E1E6);
-    }
-
-    .empty-wishlist-container h3 {
-        font-size: 1.5rem;
-        margin-top: 1.5rem;
-        color: var(--text-dark, #594A4E);
-    }
-
-    .empty-wishlist-container p {
-        color: var(--text-light, #8C7F84);
-        max-width: 400px;
-        margin: 0.5rem auto 1.5rem auto;
-    }

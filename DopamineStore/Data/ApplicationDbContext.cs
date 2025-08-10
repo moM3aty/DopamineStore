@@ -28,5 +28,7 @@ namespace DopamineStore.Data
 
         public DbSet<WishlistItem> WishlistItems { get; set; }
         public DbSet<ShippingZone> ShippingZones { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+
     }
 }

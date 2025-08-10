@@ -128,7 +128,7 @@
                 p.classList.remove("show");
                 setTimeout(() => {
                     p.style.display = "none";
-                }, 300); 
+                }, 300);
             });
 
             setTimeout(() => {
@@ -228,16 +228,16 @@ $(document).ready(function () {
     }
 
     function convertAllNumbersToArabic() {
-        $('.current-price, .old-price, .sale-label, .featured-discount-badge, .offer-current-price, .offer-old-price').each(function () {
+        $('.current-price, .old-price, .sale-label, .featured-discount-badge, .offer-current-price, .offer-old-price, #cart-badge, .numeric-value').each(function () {
             var element = $(this);
             function traverse(node) {
-                if (node.nodeType === 3) {
+                if (node.nodeType === 3) { // Text node
                     var text = node.nodeValue;
                     var convertedText = toEasternArabicNumerals(text);
                     if (text !== convertedText) {
                         node.nodeValue = convertedText;
                     }
-                } else if (node.nodeType === 1 && node.childNodes && node.nodeName.toLowerCase() !== 'script') {
+                } else if (node.nodeType === 1 && node.childNodes && node.nodeName.toLowerCase() !== 'script') { // Element node
                     for (var i = 0; i < node.childNodes.length; i++) {
                         traverse(node.childNodes[i]);
                     }
@@ -273,16 +273,28 @@ $(document).ready(function () {
         }
     }
 
-    var quantityModal = new bootstrap.Modal(document.getElementById('quantityModal'));
+    // --- Add to Cart (from Product Card) ---
+    $(document).on('click', '.btn-add-to-cart[data-product-id]', function (e) {
+        if (!$(this).closest('form').length) {
+            e.preventDefault();
 
-    $(document).on('click', '.btn-add-to-cart', function (e) {
-        e.preventDefault();
-        var productId = $(this).data('product-id');
-        $('#modalProductIdInput').val(productId);
-        $('#modalQuantityInput').val(1);
-        quantityModal.show();
+            var button = $(this);
+            var productCard = button.closest('.product-card-v2');
+            var productName = productCard.find('.product-title a').text();
+            var productImageSrc = productCard.find('.product-image img').attr('src');
+            var productId = button.data('product-id');
+
+            $('#modalProductName').text(productName);
+            $('#modalProductImage').attr('src', productImageSrc);
+            $('#modalProductIdInput').val(productId);
+            $('#modalQuantityInput').val(1);
+
+            var quantityModal = new bootstrap.Modal(document.getElementById('quantityModal'));
+            quantityModal.show();
+        }
     });
 
+    // --- Add to Cart from Modal ---
     $('#addToCartModalForm').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
@@ -293,6 +305,7 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     updateCart();
+                    var quantityModal = bootstrap.Modal.getInstance(document.getElementById('quantityModal'));
                     quantityModal.hide();
                     var slideCart = new bootstrap.Offcanvas(document.getElementById('slideCart'));
                     slideCart.show();
@@ -306,7 +319,43 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '.wishlist-btn', function (e) {
+    // --- Add to Cart from Product Details Page ---
+    $('.add-to-cart-form').on('submit', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var quantityInput = form.find('.quantity-input');
+        var quantity = parseInt(quantityInput.val());
+        var maxStock = parseInt(quantityInput.attr('max'));
+
+        if (maxStock <= 0) {
+            showToast('عذراً, هذا المنتج غير متوفر حالياً.', 'error');
+            return;
+        }
+        if (quantity > maxStock) {
+            showToast('الكمية المطلوبة أكبر من المخزون المتاح!', 'error');
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    updateCart();
+                    showToast('تمت إضافة المنتج إلى السلة بنجاح!', 'success');
+                } else {
+                    showToast(response.message || 'حدث خطأ ما', 'error');
+                }
+            },
+            error: function () {
+                showToast('حدث خطأ في الاتصال بالخادم.', 'error');
+            }
+        });
+    });
+
+    // --- Wishlist Button ---
+    $(document).on('click', '.wishlist-btn, .wishlist-btn-details', function (e) {
         e.preventDefault();
         var button = $(this);
         var productId = button.data('product-id');
@@ -338,16 +387,58 @@ $(document).ready(function () {
         });
     });
 
+    // --- Contact Form to WhatsApp ---
     $('#contact-form-whatsapp').on('submit', function (e) {
         e.preventDefault();
         var name = $('#Name').val();
         var email = $('#Email').val();
         var subject = $('#Subject').val();
         var message = $('#Message').val();
-        var phoneNumber = "201234567890";
+        var phoneNumber = "201202654696";
         var fullMessage = `رسالة جديدة من متجر دوبامين:\n\n*الاسم:* ${name}\n*البريد الإلكتروني:* ${email}\n*الموضوع:* ${subject}\n\n*الرسالة:*\n${message}`;
         var encodedMessage = encodeURIComponent(fullMessage);
         var whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
         window.open(whatsappUrl, '_blank');
     });
+
+    // --- Quantity Selector Logic (for both details page and modal) ---
+    $(document).on('click', '.quantity-selector .quantity-plus', function () {
+        var input = $(this).siblings('.quantity-input');
+        var currentValue = parseInt(input.val());
+        var maxAttr = input.attr('max');
+        var max = (maxAttr !== undefined && !isNaN(parseInt(maxAttr))) ? parseInt(maxAttr) : Infinity;
+        if (currentValue < max) {
+            input.val(currentValue + 1);
+        }
+    });
+
+    $(document).on('click', '.quantity-selector .quantity-minus', function () {
+        var input = $(this).siblings('.quantity-input');
+        var currentValue = parseInt(input.val());
+        if (currentValue > 1) {
+            input.val(currentValue - 1);
+        }
+    });
+
+    // --- Star Rating Input Logic (Product Details Page) ---
+    if ($('.product-details-section').length) {
+        $('.star-rating-input .bi').on('mouseover', function () {
+            $(this).addClass('filled').prevAll().addClass('filled');
+            $(this).nextAll().removeClass('filled');
+        }).on('mouseout', function () {
+            var selectedValue = $('#rating-value').val();
+            $('.star-rating-input .bi').each(function () {
+                if ($(this).data('value') <= selectedValue) {
+                    $(this).addClass('filled');
+                } else {
+                    $(this).removeClass('filled');
+                }
+            });
+        }).on('click', function () {
+            var value = $(this).data('value');
+            $('#rating-value').val(value);
+            $(this).addClass('filled').prevAll().addClass('filled');
+            $(this).nextAll().removeClass('filled');
+        });
+    }
 });

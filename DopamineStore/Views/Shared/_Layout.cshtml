@@ -27,10 +27,10 @@
     <link href="~/css/footer.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/shop.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/contact.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/toast.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/courses-section.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/profile.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
 
 </head>
 <body>
@@ -75,7 +75,7 @@
                                 المروه <br>
                                 بورسعيد<br>
                                 مصر <br><br>
-                                <strong>الهاتف:</strong> +20 123 456 7890<br>
+                                <strong>الهاتف:</strong> ٠١٢٠٢٦٥٤٦٩٦ <br>
                                 <strong>البريد الإلكتروني:</strong> dopaminesalmaatef@gmail.com<br>
                             </p>
                         </div>
@@ -136,21 +136,40 @@
     <!-- Add to Cart Quantity Modal -->
     <div class="modal fade" id="quantityModal" tabindex="-1" aria-labelledby="quantityModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content custom-modal-content">
                 <form id="addToCartModalForm" asp-controller="Cart" asp-action="AddToCart" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" id="modalProductIdInput" name="productId" value="">
+
                     <div class="modal-header">
-                        <h5 class="modal-title text-white" id="quantityModalLabel">تحديد الكمية</h5>
+                        <h5 class="modal-title text-white" id="quantityModalLabel">أضف إلى السلة</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+
                     <div class="modal-body">
-                        <p>الرجاء إدخال الكمية المطلوبة:</p>
-                        <input type="number" id="modalQuantityInput" name="quantity" class="form-control" value="1" min="1">
+                        <!-- Product info will be populated by JS -->
+                        <div class="modal-product-info">
+                            <img id="modalProductImage" src="https://placehold.co/100x100/F4E1E6/A64B63?text=Item" alt="Product Image">
+                            <h6 id="modalProductName">اسم المنتج</h6>
+                        </div>
+
+                        <hr>
+
+                        <div class="quantity-section">
+                            <label class="form-label">الكمية المطلوبة:</label>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn quantity-minus">-</button>
+                                <input type="number" id="modalQuantityInput" class="quantity-input" name="quantity" value="1" min="1">
+                                <button type="button" class="quantity-btn quantity-plus">+</button>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                        <button type="submit" class="btn btn-primary" id="confirmAddToCartBtn">تأكيد الإضافة</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn-main" id="confirmAddToCartBtn">
+                            <i class="bi bi-cart-plus-fill me-2"></i>تأكيد الإضافة
+                        </button>
                     </div>
                 </form>
             </div>

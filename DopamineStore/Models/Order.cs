@@ -27,6 +27,13 @@ namespace DopamineStore.Models
         public string PaymentMethod { get; set; }
         public string OrderStatus { get; set; }
 
+        [Display(Name = "كود الخصم المطبق")]
+        public string? AppliedCouponCode { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "قيمة الخصم")]
+        public decimal DiscountAmount { get; set; } = 0;
+
         public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
     }
 }

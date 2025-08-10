@@ -9,30 +9,31 @@
 </div>
 
 <div class="row g-4">
+    <!-- Order Details Column -->
     <div class="col-lg-8">
-        <div class="content-card h-100">
+        <div class="content-card">
             <div class="content-card-header">
-                <h5>المنتجات في الطلب</h5>
+                <h5><i class="fas fa-box-open me-2"></i>المنتجات في الطلب</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table align-middle order-details-table mb-0">
                         <thead>
                             <tr>
-                                <th class="p-3">المنتج</th>
-                                <th class="p-3 text-center">الكمية</th>
-                                <th class="p-3 text-center">سعر الوحدة</th>
-                                <th class="p-3 text-end">الإجمالي</th>
+                                <th>المنتج</th>
+                                <th class="text-center">الكمية</th>
+                                <th class="text-center">سعر الوحدة</th>
+                                <th class="text-end">الإجمالي</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var detail in Model.OrderDetails)
                             {
                                 <tr>
-                                    <td class="p-3 product-name">@detail.Product.Name</td>
-                                    <td class="p-3 text-center">x @detail.Quantity</td>
-                                    <td class="p-3 text-center">@detail.UnitPrice.ToString("C")</td>
-                                    <td class="p-3 text-end fw-bold">@((detail.Quantity * detail.UnitPrice).ToString("C"))</td>
+                                    <td class="product-name">@(detail.Product?.Name ?? "منتج محذوف")</td>
+                                    <td class="text-center">x @detail.Quantity</td>
+                                    <td class="text-center">@detail.UnitPrice.ToString("C")</td>
+                                    <td class="text-end fw-bold">@((detail.Quantity * detail.UnitPrice).ToString("C"))</td>
                                 </tr>
                             }
                         </tbody>
@@ -46,24 +47,38 @@
                 </div>
             </div>
         </div>
+        <div class="content-card mt-4">
+            <div class="content-card-header">
+                <h5><i class="fas fa-cogs me-2"></i>إجراءات</h5>
+            </div>
+            <div class="card-body text-center d-grid">
+                <a asp-action="Invoice" asp-route-id="@Model.Id" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-print me-2"></i>عرض وطباعة الفاتورة
+                </a>
+            </div>
+        </div>
     </div>
+
+    <!-- Info & Actions Column -->
     <div class="col-lg-4">
         <div class="content-card mb-4">
             <div class="content-card-header">
-                <h5>معلومات العميل</h5>
+                <h5><i class="fas fa-user-circle me-2"></i>معلومات العميل والشحن</h5>
             </div>
             <div class="card-body">
-                <ul class="list-unstyled info-list">
+                <ul class="info-list">
                     <li><i class="fas fa-user"></i> <strong>الاسم:</strong> <span>@Model.CustomerName</span></li>
                     <li><i class="fas fa-envelope"></i> <strong>البريد:</strong> <span>@Model.CustomerEmail</span></li>
                     <li><i class="fas fa-phone"></i> <strong>الهاتف:</strong> <span>@Model.PhoneNumber</span></li>
-                    <li><i class="fas fa-map-marker-alt"></i> <strong>العنوان:</strong> <span>@Model.ShippingAddress, @Model.City</span></li>
+                    <li><i class="fas fa-map-marker-alt"></i> <strong>العنوان:</strong> <span>@Model.ShippingAddress</span></li>
+                    <li><i class="fas fa-map-pin"></i> <strong>المنطقة:</strong> <span>@Model.City</span></li>
+                    <li><i class="fas fa-shipping-fast"></i> <strong>الحالة:</strong> <span><span class="badge rounded-pill status-badge status-@Model.OrderStatus.ToLower().Replace(" ", "-")">@Model.OrderStatus</span></span></li>
                 </ul>
             </div>
         </div>
-        <div class="content-card">
+        <div class="content-card mb-4">
             <div class="content-card-header">
-                <h5>تحديث حالة الطلب</h5>
+                <h5><i class="fas fa-edit me-2"></i>تحديث حالة الطلب</h5>
             </div>
             <div class="card-body">
                 <form asp-action="UpdateStatus" method="post">

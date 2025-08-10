@@ -33,21 +33,18 @@ namespace DopamineStore.Controllers
             {
                 Products = allProducts,
                 Categories = allCategories,
-
                 Reviews = await _context.Reviews.Where(r => r.IsApproved).OrderByDescending(r => r.ReviewDate).Take(5).ToListAsync(),
-
                 SpecialOffers = await _context.Products
-                                        .Where(p => p.OfferEndDate.HasValue && p.OfferEndDate > DateTime.Now)
-                                        .Include(p => p.Category)
-                                        .OrderBy(p => p.OfferEndDate)
-                                        .Take(3)
-                                        .ToListAsync(),
-
+                                    .Where(p => p.OfferEndDate.HasValue && p.OfferEndDate > DateTime.Now)
+                                    .Include(p => p.Category)
+                                    .OrderBy(p => p.OfferEndDate)
+                                    .Take(3)
+                                    .ToListAsync(),
                 FeaturedProducts = await _context.Products
-                                            .Where(p => p.IsFeatured)
-                                            .Include(p => p.Category)
-                                            .Take(4)
-                                            .ToListAsync()
+                                        .Where(p => p.IsFeatured)
+                                        .Include(p => p.Category)
+                                        .Take(4)
+                                        .ToListAsync()
             };
             return View(viewModel);
         }
@@ -62,7 +59,19 @@ namespace DopamineStore.Controllers
 
             if (product == null) return NotFound();
 
-            return View(product);
+            // Fetch related products from the same category, excluding the current one.
+            var relatedProducts = await _context.Products
+                .Where(p => p.CategoryId == product.CategoryId && p.Id != id)
+                .Take(4)
+                .ToListAsync();
+
+            var viewModel = new ProductDetailsViewModel
+            {
+                Product = product,
+                RelatedProducts = relatedProducts
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -85,23 +94,20 @@ namespace DopamineStore.Controllers
             TempData["SuccessMessage"] = "شكراً لك! تم إرسال مراجعتك وستظهر بعد الموافقة عليها.";
             return RedirectToAction("ProductDetails", new { id = model.ProductId });
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult SendContactMessage(ContactFormViewModel model)
         {
             if (ModelState.IsValid)
             {
-    
-
                 TempData["ContactSuccess"] = "تم إرسال رسالتك بنجاح! شكراً لتواصلك معنا.";
             }
             else
             {
                 TempData["ContactError"] = "الرجاء التأكد من ملء جميع الحقول بشكل صحيح.";
             }
-
             return Redirect(Url.Action("Index", "Home") + "#contact");
         }
-
     }
 }

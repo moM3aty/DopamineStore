@@ -62,14 +62,15 @@ namespace DopamineStore.Controllers
             var cartItems = await _context.CartItems.Where(c => c.CartId == cartId).Include(c => c.Product).ToListAsync();
             decimal cartTotal = cartItems.Sum(item => item.Quantity * item.Product.Price);
             int cartCount = cartItems.Sum(item => item.Quantity);
+            decimal itemTotal = itemRemoved ? 0 : cartItem.Quantity * cartItem.Product.Price;
 
             return Json(new
             {
                 success = true,
                 itemRemoved,
                 newQuantity = itemRemoved ? 0 : cartItem.Quantity,
-                itemTotal = itemRemoved ? "0" : (cartItem.Quantity * cartItem.Product.Price).ToString("C"),
-                cartTotal = cartTotal.ToString("C"),
+                itemTotal, // Return raw number
+                cartTotal, // Return raw number
                 cartCount
             });
         }
@@ -137,9 +138,9 @@ namespace DopamineStore.Controllers
         {
             var cartId = _cartService.GetCartId();
             var cartItems = await _context.CartItems
-                                      .Include(c => c.Product)
-                                      .Where(c => c.CartId == cartId)
-                                      .ToListAsync();
+                                          .Include(c => c.Product)
+                                          .Where(c => c.CartId == cartId)
+                                          .ToListAsync();
 
             decimal total = cartItems.Sum(item => item.Quantity * item.Product.Price);
             int count = cartItems.Sum(item => item.Quantity);

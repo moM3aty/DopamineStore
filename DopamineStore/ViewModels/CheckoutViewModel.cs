@@ -32,6 +32,8 @@ namespace DopamineStore.ViewModels
         [Display(Name = "طريقة الدفع")]
         public string PaymentMethod { get; set; }
 
+        public string? CouponCode { get; set; }
+
         public List<CartItem> CartItems { get; set; } = new List<CartItem>();
         public decimal SubTotal { get; set; }
         public decimal ShippingCost { get; set; }

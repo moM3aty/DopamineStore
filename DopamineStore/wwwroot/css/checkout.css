@@ -1,24 +1,28 @@
-﻿
+﻿/*
+=========================================
+    Checkout Page Styles
+=========================================
+*/
+
 .checkout-page {
-    padding-top: 120px;
-    padding-bottom: 80px;
+    padding: 80px 0;
 }
 
-.checkout-form-card {
+.checkout-form-card, .order-summary-card, .coupon-card {
     background: var(--white-bg);
-    border-radius: var(--border-radius);
     padding: 2rem;
-    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
 }
 
-    .checkout-form-card h4 {
+    .checkout-form-card h4, .order-summary-card h4, .coupon-card h4 {
+        font-weight: 700;
+        color: var(--text-dark);
         margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--border-color);
     }
 
-/* Payment Methods */
+/* --- Payment Methods --- */
 .payment-methods {
     display: grid;
     gap: 1rem;
@@ -31,15 +35,14 @@
     .payment-option input[type="radio"] {
         position: absolute;
         opacity: 0;
-        width: 0;
-        height: 0;
     }
 
     .payment-option label {
         display: flex;
         align-items: center;
+        width: 100%;
         padding: 1rem;
-        border: 2px solid var(--border-color);
+        border: 1px solid var(--border-color);
         border-radius: 10px;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -47,8 +50,8 @@
 
     .payment-option input[type="radio"]:checked + label {
         border-color: var(--primary-color);
-        background-color: var(--light-bg);
-        box-shadow: 0 0 10px var(--accent-color);
+        background-color: var(--accent-color);
+        box-shadow: 0 0 0 2px var(--primary-color);
     }
 
     .payment-option label i {
@@ -57,39 +60,36 @@
         margin-left: 1rem;
     }
 
-    .payment-option label span {
-        font-weight: 600;
-    }
-
+/* --- Order Summary --- */
 .order-summary-card .total-line {
-    border-top: 2px solid var(--text-dark);
+    border-top: 2px solid var(--primary-color);
     padding-top: 1rem;
 }
 
-.payment-instructions-card {
-    background: var(--white-bg);
-    border-radius: var(--border-radius);
+/* --- Coupon Card --- */
+.coupon-card {
+    background: #fff;
     padding: 2rem;
-    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
+}
+.coupon-card .input-group {
+    direction: ltr;
 }
 
-.payment-title {
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-}
+    .coupon-card .input-group .form-control {
+        border-left: none;
+        text-align: right; 
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
 
-.qr-code-img {
-    max-width: 250px;
-    margin-bottom: 1.5rem;
-}
+    .coupon-card .input-group .btn {
+        border-color: var(--border-color);
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
 
-.payment-details {
-    font-size: 1.1rem;
-}
-
-.confirmation-note {
-    margin-top: 1.5rem;
-    font-style: italic;
-    color: var(--text-light);
+#coupon-message {
+    font-weight: 600;
+    margin-top: 0.5rem;
 }

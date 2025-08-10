@@ -1,4 +1,9 @@
 ﻿@model IEnumerable<CartItem>
+@using System.Globalization
+@{
+    // Use InvariantCulture to ensure JS gets clean, parsable numbers (e.g., 123.45)
+    var culture = CultureInfo.InvariantCulture;
+}
 
 <div class="d-flex flex-column h-100">
     @if (Model.Any())
@@ -7,30 +12,27 @@
             @foreach (var item in Model)
             {
                 <div class="slide-cart-item">
-                    <img src="@(string.IsNullOrEmpty(item.Product.ImageUrl) ? "https://placehold.co/100x100/F4E1E6/A64B63?text=Item" : item.Product.ImageUrl)" alt="@item.Product.Name" class="item-image">
+                    <img src="@(string.IsNullOrEmpty(item.Product.ImageUrl) ? $"https://placehold.co/100x100/F4E1E6/A64B63?text=Item" : item.Product.ImageUrl)" alt="@item.Product.Name" class="item-image">
                     <div class="item-details">
                         <h6 class="item-title">@item.Product.Name</h6>
                         <div class="item-meta">
-                            <span>@item.Quantity x </span>
-                            <span class="item-price">@item.Product.Price.ToString("C")</span>
+                            <span class="numeric-value">@item.Quantity.ToString("N0") x </span>
+                            <span class="item-price numeric-value">@item.Product.Price.ToString("C")</span>
                         </div>
                     </div>
-                    <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@item.Id" />
-                        <button type="submit" class="btn btn-sm btn-remove" title="إزالة المنتج">&times;</button>
-                    </form>
+                    <!-- Changed from a form to a button for AJAX handling -->
+                    <button type="button" class="btn btn-sm btn-remove remove-from-cart-btn" data-id="@item.Id" title="إزالة المنتج">&times;</button>
                 </div>
             }
         </div>
         <div class="slide-cart-footer">
             <div class="d-flex justify-content-between fw-bold mb-3">
                 <span>الإجمالي:</span>
-                <span>@Model.Sum(i => i.Quantity * i.Product.Price).ToString("C")</span>
+                <span class="numeric-value">@Model.Sum(i => i.Quantity * i.Product.Price).ToString("C")</span>
             </div>
             <div class="d-grid gap-2">
                 <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-main">عرض السلة</a>
-                <a asp-controller="Checkout" asp-action="Index" class="btn-main">إتمام الطلب</a>
+                <a asp-controller="Checkout" asp-action="Index" class="btn-main text-center">إتمام الطلب</a>
             </div>
         </div>
     }

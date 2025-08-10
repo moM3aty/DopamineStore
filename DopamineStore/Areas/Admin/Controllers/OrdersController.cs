@@ -21,7 +21,6 @@ namespace DopamineStore.Areas.Admin.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             ViewData["CurrentFilter"] = searchString;
-
             var ordersQuery = _context.Orders.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -40,6 +39,7 @@ namespace DopamineStore.Areas.Admin.Controllers
             return View(orders);
         }
 
+        // GET: Admin/Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -59,6 +59,23 @@ namespace DopamineStore.Areas.Admin.Controllers
 
             return View(order);
         }
+
+        // GET: Admin/Orders/Invoice/5
+        public async Task<IActionResult> Invoice(int id)
+        {
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

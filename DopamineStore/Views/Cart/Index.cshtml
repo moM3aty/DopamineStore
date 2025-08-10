@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<CartItem>
+@using System.Globalization
 @{
     ViewData["Title"] = "سلة التسوق";
+    var culture = new CultureInfo("ar-EG");
     decimal total = Model.Any() ? Model.Sum(item => item.Quantity * item.Product.Price) : 0;
 }
 
@@ -23,7 +25,7 @@
                             </div>
                             <div class="cart-item-details">
                                 <h5>@item.Product.Name</h5>
-                                <p class="text-light mb-1">السعر: @item.Product.Price.ToString("C")</p>
+                                <p class="text-dark mb-1 numeric-value">السعر: @item.Product.Price.ToString("C", culture)</p>
                             </div>
                             <div class="mx-4">
                                 <div class="quantity-controls">
@@ -32,7 +34,7 @@
                                     <button class="quantity-btn quantity-plus" data-item-id="@item.Id">+</button>
                                 </div>
                             </div>
-                            <h5 class="mx-4 item-total" id="item-total-@item.Id">@((item.Quantity * item.Product.Price).ToString("C"))</h5>
+                            <h5 class="mx-4 item-total numeric-value" id="item-total-@item.Id">@((item.Quantity * item.Product.Price).ToString("C", culture))</h5>
                             <button class="btn btn-sm btn-remove" data-item-id="@item.Id" title="إزالة المنتج">&times;</button>
                         </div>
                     }
@@ -51,14 +53,14 @@
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <span>الإجمالي الفرعي</span>
-                        <span id="cart-subtotal">@total.ToString("C")</span>
+                        <span id="cart-subtotal" class="numeric-value">@total.ToString("C", culture)</span>
                     </div>
                     <div class="d-flex justify-content-between fw-bold h5">
                         <span>الإجمالي النهائي</span>
-                        <span id="cart-total">@total.ToString("C")</span>
+                        <span id="cart-total" class="numeric-value">@total.ToString("C", culture)</span>
                     </div>
                     <div class="d-grid mt-4">
-                        <a asp-controller="Checkout" asp-action="Index" class="btn-main" id="checkout-btn" style="@(Model.Any() ? "" : "display:none;")">التقدم لإتمام الطلب</a>
+                        <a asp-controller="Checkout" asp-action="Index" class="btn-main text-center" id="checkout-btn" style="@(Model.Any() ? "" : "display:none;")">التقدم لإتمام الطلب</a>
                     </div>
                 </div>
             </div>
@@ -69,52 +71,56 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            // Function to show toast notifications
-            function showToast(message, type = 'error') {
-                let toastContainer = $('#toast-container');
-                if (toastContainer.length === 0) {
-                    $('body').append('<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1056"></div>');
-                    toastContainer = $('#toast-container');
-                }
-                const bgColor = type === 'error' ? 'bg-danger' : 'bg-success';
-                const iconClass = type === 'error' ? 'bi-x-circle-fill' : 'bi-check-circle-fill';
-                const toastHtml = `
-                    <div class="toast align-items-center text-white ${bgColor} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                            <div class="toast-body d-flex align-items-center">
-                                <i class="bi ${iconClass} me-2"></i>
-                                ${message}
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                    </div>`;
-                var toastElement = $(toastHtml);
-                toastContainer.append(toastElement);
-                var bsToast = new bootstrap.Toast(toastElement[0], { delay: 4000 });
-                bsToast.show();
+            // --- Helper Functions ---
+            const toEasternArabicNumerals = (str) => {
+                if (str === null || str === undefined) return '';
+                let numStr = String(str);
+                const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                return numStr.replace(/[0-9]/g, w => arabicNumerals[+w]).replace('.', '٫');
+            };
+
+            const currencyFormatter = new Intl.NumberFormat('ar-EG-u-nu-arab', {
+                style: 'currency',
+                currency: 'EGP',
+                minimumFractionDigits: 2
+            });
+
+            function convertAllNumbers() {
+                $('.numeric-value, .quantity-input').each(function() {
+                    if($(this).is('input')) {
+                        $(this).val(toEasternArabicNumerals($(this).val()));
+                    } else {
+                        $(this).text(toEasternArabicNumerals($(this).text()));
+                    }
+                });
             }
 
+            // --- Initial Conversion on Page Load ---
+            convertAllNumbers();
+
+            // --- Update Cart Logic ---
             function updateCartItem(itemId, newQuantity) {
                 $.post('/Cart/UpdateQuantity', { id: itemId, quantity: newQuantity }, function(response) {
                     if (response.success) {
                         if (response.itemRemoved) {
-                            $('#cart-item-' + itemId).fadeOut(300, function() { $(this).remove(); });
+                            $('#cart-item-' + itemId).fadeOut(300, function() {
+                                $(this).remove();
+                                if ($('.cart-item').length === 0) {
+                                     $('#checkout-btn').fadeOut();
+                                     $('#cart-items-container').html('<div class="text-center py-5" id="empty-cart-message"><p class="lead">سلتك فارغة حالياً.</p><a href="/Home/Index" class="btn-main">ابدأ التسوق</a></div>');
+                                }
+                            });
                         } else {
-                            $('#cart-item-' + itemId).find('.quantity-input').val(response.newQuantity);
-                            $('#item-total-' + itemId).text(response.itemTotal);
+                            $('#cart-item-' + itemId).find('.quantity-input').val(toEasternArabicNumerals(response.newQuantity));
+                            $('#item-total-' + itemId).text(currencyFormatter.format(response.itemTotal));
                         }
 
-                        $('#cart-subtotal').text(response.cartTotal);
-                        $('#cart-total').text(response.cartTotal);
-                        $('#cart-badge').text(response.cartCount);
+                        $('#cart-subtotal').text(currencyFormatter.format(response.cartTotal));
+                        $('#cart-total').text(currencyFormatter.format(response.cartTotal));
+                        $('#cart-badge').text(toEasternArabicNumerals(response.cartCount));
 
-                        if(response.cartCount === 0) {
-                            $('#checkout-btn').fadeOut();
-                            if($('#empty-cart-message').length === 0) {
-                                 $('#cart-items-container').html('<div class="text-center py-5" id="empty-cart-message"><p class="lead">سلتك فارغة حالياً.</p><a href="/Home/Index" class="btn-main">ابدأ التسوق</a></div>');
-                            }
-                        }
                     } else {
+                        // This function needs to be defined globally or passed in
                         showToast(response.message, 'error');
                     }
                 });
@@ -123,14 +129,15 @@
             $('#cart-items-container').on('click', '.quantity-plus', function() {
                 var itemId = $(this).data('item-id');
                 var input = $(this).siblings('.quantity-input');
-                var currentQuantity = parseInt(input.val());
+                // The input value is in Arabic, so we need to convert it back to process
+                var currentQuantity = parseInt(input.val().replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)));
                 updateCartItem(itemId, currentQuantity + 1);
             });
 
             $('#cart-items-container').on('click', '.quantity-minus', function() {
                 var itemId = $(this).data('item-id');
                 var input = $(this).siblings('.quantity-input');
-                var currentQuantity = parseInt(input.val());
+                var currentQuantity = parseInt(input.val().replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)));
                 updateCartItem(itemId, currentQuantity - 1);
             });
 

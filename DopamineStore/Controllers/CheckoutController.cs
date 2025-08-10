@@ -63,12 +63,15 @@ namespace DopamineStore.Controllers
         {
             var cartId = _cartService.GetCartId();
             model.CartItems = await _context.CartItems.Include(c => c.Product).Where(c => c.CartId == cartId).ToListAsync();
+
+            if (!model.CartItems.Any()) return RedirectToAction("Index", "Cart");
+
             model.SubTotal = model.CartItems.Sum(item => item.Quantity * item.Product.Price);
 
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
-                model.CustomerEmail = user.Email; 
+                model.CustomerEmail = user.Email;
                 ModelState.Remove("CustomerEmail");
             }
 
@@ -89,6 +92,16 @@ namespace DopamineStore.Controllers
                 return View("Index", model);
             }
 
+            decimal discountAmount = 0;
+            if (!string.IsNullOrEmpty(model.CouponCode))
+            {
+                var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.Code.ToUpper() == model.CouponCode.ToUpper());
+                if (coupon != null && coupon.IsActive && coupon.ExpiryDate >= DateTime.Today)
+                {
+                    discountAmount = CalculateDiscount(model.SubTotal, coupon);
+                }
+            }
+
             var order = new Order
             {
                 OrderDate = DateTime.Now,
@@ -99,7 +112,9 @@ namespace DopamineStore.Controllers
                 City = shippingZone.Name,
                 PaymentMethod = model.PaymentMethod,
                 OrderStatus = "قيد الانتظار",
-                TotalAmount = model.SubTotal + shippingZone.Cost
+                AppliedCouponCode = model.CouponCode,
+                DiscountAmount = discountAmount,
+                TotalAmount = (model.SubTotal - discountAmount) + shippingZone.Cost
             };
 
             foreach (var item in model.CartItems)
@@ -113,12 +128,39 @@ namespace DopamineStore.Controllers
             _context.CartItems.RemoveRange(model.CartItems);
             await _context.SaveChangesAsync();
 
-            if (model.PaymentMethod == "CreditCard")
+            return RedirectToAction("Confirmation", new { id = order.Id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(string couponCode)
+        {
+            var cartId = _cartService.GetCartId();
+            var cartItems = await _context.CartItems.Include(c => c.Product).Where(c => c.CartId == cartId).ToListAsync();
+            if (!cartItems.Any())
             {
-                return RedirectToAction("Index", "Payment", new { orderId = order.Id });
+                return Json(new { success = false, message = "سلة التسوق فارغة." });
             }
 
-            return RedirectToAction("Confirmation", new { id = order.Id });
+            var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.Code.ToUpper() == couponCode.ToUpper());
+
+            if (coupon == null || !coupon.IsActive || coupon.ExpiryDate < DateTime.Today)
+            {
+                return Json(new { success = false, message = "كود الخصم غير صالح أو منتهي الصلاحية." });
+            }
+
+            var subtotal = cartItems.Sum(item => item.Quantity * item.Product.Price);
+            var discountAmount = CalculateDiscount(subtotal, coupon);
+
+            return Json(new { success = true, message = "تم تطبيق الخصم بنجاح!", discountAmount });
+        }
+
+        private decimal CalculateDiscount(decimal subtotal, Coupon coupon)
+        {
+            if (coupon.DiscountType == DiscountType.Percentage)
+            {
+                return (subtotal * coupon.DiscountValue) / 100;
+            }
+            return Math.Min(subtotal, coupon.DiscountValue); 
         }
 
         public async Task<IActionResult> Confirmation(int id)
@@ -126,6 +168,17 @@ namespace DopamineStore.Controllers
             var order = await _context.Orders.FindAsync(id);
             if (order == null) return NotFound();
             return View(order);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetShippingCost(int zoneId)
+        {
+            var shippingZone = await _context.ShippingZones.FindAsync(zoneId);
+            if (shippingZone == null)
+            {
+                return Json(new { success = false });
+            }
+            return Json(new { success = true, cost = shippingZone.Cost });
         }
     }
 }

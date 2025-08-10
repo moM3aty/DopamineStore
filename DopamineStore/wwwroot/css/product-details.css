@@ -1,4 +1,9 @@
-﻿
+﻿/*
+=========================================
+    Product Details Page Styles
+=========================================
+*/
+
 .product-details-section {
     padding-top: 120px;
     padding-bottom: 80px;
@@ -69,9 +74,11 @@
     }
 
     .product-info h2 {
-        font-size: 2.5rem;
+        font-family: var(--font-brand);
+        font-size: 2.8rem;
         margin-top: 0.5rem;
         margin-bottom: 1rem;
+        color: var(--text-dark);
     }
 
 .price-section {
@@ -83,10 +90,10 @@
 }
 
 .product-info .current-price {
+    font-family: var(--font-brand);
     font-size: 2.2rem;
     font-weight: 700;
     color: var(--primary-color);
-    font-family: var(--font-brand);
 }
 
 .product-info .old-price {
@@ -96,15 +103,56 @@
     text-decoration: line-through;
 }
 
-.product-info .quantity-selector {
-    text-align: center;
+/* --- Add to Cart & Wishlist Controls --- */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--border-color);
     border-radius: 50px;
     height: 50px;
 }
 
-.product-info .btn-add-to-cart {
+    .quantity-selector .quantity-btn {
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        width: 40px;
+        cursor: pointer;
+    }
+
+    .quantity-selector .quantity-input {
+        border: none;
+        text-align: center;
+        width: 50px;
+        font-weight: 700;
+        -moz-appearance: textfield;
+    }
+
+        .quantity-selector .quantity-input::-webkit-outer-spin-button,
+        .quantity-selector .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+.add-to-cart-controls .btn-add-to-cart {
     height: 50px;
 }
+
+.wishlist-btn-details {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color var(--transition-speed);
+}
+
+    .wishlist-btn-details:hover, .wishlist-btn-details.is-wished {
+        color: var(--primary-color);
+    }
+
 
 /* --- Star Ratings --- */
 .star-rating-display .fa-star {
@@ -138,7 +186,7 @@
 
 /* --- Reviews Section --- */
 .reviews-section {
-    padding-top: 80px;
+    padding: 80px 0;
 }
 
 .reviews-list .review-item {
@@ -184,3 +232,8 @@
         text-align: center;
         margin-bottom: 1.5rem;
     }
+
+/* --- Related Products Section --- */
+.related-products-section {
+    padding: 80px 0;
+}

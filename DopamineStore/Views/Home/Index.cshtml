@@ -9,8 +9,8 @@
         <div class="row">
             <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
                 <h1>صُنعت لتُشعِرك بالسَعادة</h1>
-                <h2>فن يروي حكايتك</h2>
-                <h2>منتجات يدوية مصنوعة بشغف لتضيف لمسة من السعادة ليومك.</h2>
+               
+                <h2>فن يروي حكايتك منتجات يدوية مصنوعة بشغف لتضيف لمسة من السعادة ليومك.  </h2>
                 <div class="d-flex justify-content-center justify-content-lg-start">
                     <a href="#Product" class="btn-main scrollto">تصفح المنتجات</a>
                 </div>
@@ -64,7 +64,7 @@
                         <li><i class="bi bi-magic"></i> اعمل على مشروعك الخاص بإشرافنا.</li>
                         <li><i class="bi bi-lightbulb-fill"></i> حول شغفك إلى مصدر إلهام.</li>
                     </ul>
-                <a href="https://wa.me/+201275844735" target="_blank" class="btn-main">انضم للورشة الآن</a>
+                <a href="https://wa.me/+201202654696" target="_blank" class="btn-main">انضم للورشة الآن</a>
             </div>
             </div>
             <div class="col-lg-5" data-aos="fade-left" data-aos-delay="100">
@@ -147,10 +147,12 @@
             <div class="row">
                 <div class="col-lg-12 d-flex justify-content-center">
                     <ul id="portfolio-flters">
-                        @foreach (var category in Model.Categories)
+                        @foreach (var category in Model.Categories.Take(9))
                         {
                             <li data-filter="@category.Id">@category.Name</li>
                         }
+                                            <li><a asp-controller="Shop" asp-action="Index" class="filter-more">عرض المزيد <i class="bi bi-arrow-left"></i></a></li>
+
                     </ul>
                 </div>
             </div>

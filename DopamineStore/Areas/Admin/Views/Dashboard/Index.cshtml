@@ -8,6 +8,7 @@
         .ToList();
 }
 
+<!-- Low Stock Alert -->
 @if (TempData["LowStockWarning"] != null)
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -17,88 +18,133 @@
     </div>
 }
 
+<!-- Page Header -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">@ViewData["Title"]</h1>
 </div>
 
+<!-- Stat Cards Row -->
 <div class="row">
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="stat-card bg-primary text-white">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-stat-card bg-primary-gradient">
             <div class="card-body">
                 <div>
-                    <div class="h3">@Model.TotalProducts</div>
-                    <div class="text-white-75">إجمالي المنتجات</div>
+                    <div class="stat-title">إجمالي المبيعات</div>
+                    <div class="stat-value">@Model.TotalSales.ToString("C0")</div>
                 </div>
-                <div class="stat-icon">
-                    <i class="fas fa-boxes-stacked"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card stat-card bg-success text-white">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-stat-card bg-success-gradient">
             <div class="card-body">
                 <div>
-                    <div class="h3">@Model.TotalOrders</div>
-                    <div class="text-white-75">إجمالي الطلبات</div>
+                    <div class="stat-title">مبيعات اليوم</div>
+                    <div class="stat-value">@Model.SalesToday.ToString("C0")</div>
                 </div>
-                <div class="stat-icon">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card stat-card bg-warning text-white">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-stat-card bg-info-gradient">
             <div class="card-body">
                 <div>
-                    <div class="h3">@Model.TotalCategories</div>
-                    <div class="text-white-75">إجمالي الأقسام</div>
+                    <div class="stat-title">إجمالي الطلبات</div>
+                    <div class="stat-value">@Model.TotalOrders</div>
                 </div>
-                <div class="stat-icon">
-                    <i class="fas fa-tags"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card stat-card bg-danger text-white">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-stat-card bg-warning-gradient">
             <div class="card-body">
                 <div>
-                    <div class="h3">@Model.TotalUsers</div>
-                    <div class="text-white-75">إجمالي المستخدمين</div>
+                    <div class="stat-title">متوسط قيمة الطلب</div>
+                    <div class="stat-value">@Model.AverageOrderValue.ToString("C0")</div>
                 </div>
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
+                <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
             </div>
         </div>
     </div>
 </div>
-<div class="row mt-4">
+
+<!-- Charts Row 1 -->
+<div class="row">
     <div class="col-lg-8 mb-4">
         <div class="card shadow-sm h-100">
-            <div class="card-header">
-                <i class="fas fa-chart-line me-1"></i>
-                المبيعات خلال آخر 12 شهر
-            </div>
-            <div class="card-body">
-                <canvas id="salesChart"></canvas>
-            </div>
+            <div class="card-header"><i class="fas fa-chart-area me-1"></i>المبيعات خلال آخر 12 شهر</div>
+            <div class="card-body"><canvas id="monthlySalesChart"></canvas></div>
         </div>
     </div>
     <div class="col-lg-4 mb-4">
         <div class="card shadow-sm h-100">
-            <div class="card-header">
-                <i class="fas fa-chart-pie me-1"></i>
-                الأقسام الأكثر مبيعاً
+            <div class="card-header"><i class="fas fa-chart-bar me-1"></i>المبيعات خلال آخر 7 أيام</div>
+            <div class="card-body"><canvas id="dailySalesChart"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<!-- Lists Row -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm h-100 list-card">
+            <div class="card-header"><i class="fas fa-fire me-1"></i>المنتجات الأكثر مبيعاً</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    @foreach (var product in Model.TopSellingProducts)
+                    {
+                        <li class="list-group-item">
+                            <div class="list-item-info">
+                                <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://placehold.co/100x100/F4E1E6/A64B63?text=P" : product.ImageUrl)" class="list-item-img" />
+                                <span class="list-item-name">@product.ProductName</span>
+                            </div>
+                            <span class="list-item-value">@product.UnitsSold قطعة</span>
+                        </li>
+                    }
+                </ul>
             </div>
-            <div class="card-body">
-                <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm h-100 list-card">
+            <div class="card-header"><i class="fas fa-crown me-1"></i>أفضل العملاء</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    @foreach (var customer in Model.TopCustomers)
+                    {
+                        <li class="list-group-item">
+                            <div class="list-item-info">
+                                <span class="list-item-name">@customer.CustomerName</span>
+                            </div>
+                            <span class="list-item-value">@customer.TotalSpent.ToString("C0")</span>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Charts Row 2 -->
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="fas fa-tags me-1"></i>الأقسام الأكثر مبيعاً (حسب عدد القطع)</div>
+            <div class="card-body"><canvas id="categorySalesChart"></canvas></div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="fas fa-tasks me-1"></i>توزيع حالات الطلبات</div>
+            <div class="card-body"><canvas id="orderStatusChart"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders Table -->
 <div class="row">
     <div class="col-12">
         <div class="card shadow-sm">
@@ -153,10 +199,13 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Sales Chart
-            var salesCtx = document.getElementById('salesChart').getContext('2d');
-            new Chart(salesCtx, {
+        document.addEventListener("DOMContentLoaded", function () {
+            // Chart Defaults
+            Chart.defaults.font.family = 'Tajawal';
+
+            // Monthly Sales Chart (Line)
+            var monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
+            new Chart(monthlySalesCtx, {
                 type: 'line',
                 data: {
                     labels: @Html.Raw(Json.Serialize(monthLabels)),
@@ -170,36 +219,54 @@
                         tension: 0.3
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
             });
 
-            // Category Chart
-            var categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            // Daily Sales Chart (Bar)
+            var dailySalesCtx = document.getElementById('dailySalesChart').getContext('2d');
+            new Chart(dailySalesCtx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.Last7DaysLabels)),
+                    datasets: [{
+                        label: 'مبيعات اليوم (ج.م)',
+                        data: @Html.Raw(Json.Serialize(Model.DailySalesLast7Days)),
+                        backgroundColor: '#1cc88a',
+                        borderColor: '#13855c',
+                        borderWidth: 1
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            });
+
+            // Category Sales Chart (Bar)
+            var categoryCtx = document.getElementById('categorySalesChart').getContext('2d');
             new Chart(categoryCtx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
                     labels: @Html.Raw(Json.Serialize(Model.CategoryNames)),
                     datasets: [{
                         label: 'عدد القطع المباعة',
                         data: @Html.Raw(Json.Serialize(Model.CategorySalesData)),
-                        backgroundColor: [
-                            '#E91E63', '#F48FB1', '#880E4F', '#AD1457', '#F06292'
-                        ],
+                        backgroundColor: ['#E91E63', '#F48FB1', '#880E4F', '#AD1457', '#F06292'],
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y' }
+            });
+
+            // Order Status Chart (Doughnut)
+            var orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+            new Chart(orderStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.OrderStatusLabels)),
+                    datasets: [{
+                        data: @Html.Raw(Json.Serialize(Model.OrderStatusCounts)),
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
                         hoverOffset: 4
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
         });
     </script>

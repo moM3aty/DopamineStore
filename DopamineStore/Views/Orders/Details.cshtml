@@ -13,7 +13,7 @@
             <ul class="list-unstyled info-list">
                 <li><i class="fas fa-calendar-alt"></i> <strong>تاريخ الطلب:</strong> @Model.OrderDate.ToString("g")</li>
                 <li><i class="fas fa-credit-card"></i> <strong>طريقة الدفع:</strong> @Model.PaymentMethod</li>
-                <li><i class="fas fa-info-circle"></i> <strong>الحالة:</strong> <span class="badge rounded-pill status-badge status-@Model.OrderStatus.ToLower().Replace(" ", "-")">@Model.OrderStatus</span></li>
+                <li><i class="fas fa-info-circle"></i> <strong>الحالة:</strong> <span class="text-dark badge rounded-pill status-badge status-@Model.OrderStatus.ToLower().Replace(" ", "-")">@Model.OrderStatus</span></li>
             </ul>
         </div>
         <div class="col-md-6">
