@@ -33,7 +33,7 @@
         .courses-section .content ul i {
             font-size: 24px;
             color: var(--secondary-color, #D98BA0);
-            margin-left: 10px; /* For RTL */
+            margin-left: 10px; 
         }
 
     .courses-section .btn-learn-more {

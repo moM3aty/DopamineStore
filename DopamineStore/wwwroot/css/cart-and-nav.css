@@ -1,5 +1,4 @@
 ﻿
-/* --- Navbar General --- */
 .navbar .getstarted {
     background: var(--primary-color);
     color: var(--white-text);
@@ -15,7 +14,7 @@
         color: var(--white-text);
     }
 
-/* --- Profile Dropdown --- */
+
 .profile-dropdown .nav-link {
     padding-right: 0;
 }
@@ -64,7 +63,7 @@
             color: var(--primary-color);
         }
 
-/* --- Cart Icon --- */
+
 .cart-icon-wrapper {
     margin-right: 15px;
 }
@@ -105,7 +104,6 @@
         background-color: var(--secondary-color);
     }
 
-/* --- Slide-out Cart Panel --- */
 .slide-cart {
     width: 380px !important;
     border-left: 1px solid var(--border-color);

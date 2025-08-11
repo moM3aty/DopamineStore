@@ -1,5 +1,4 @@
 ﻿
-/* --- Page Header --- */
 .product-management-header {
     display: flex;
     justify-content: space-between;
@@ -32,7 +31,6 @@
         box-shadow: 0 7px 20px rgba(166, 75, 99, 0.3);
     }
 
-/* --- Filter Card --- */
 .filter-card {
     background: var(--admin-white-bg, #fff);
     border-radius: 12px;
@@ -62,7 +60,7 @@
             transform: translateY(-2px);
         }
 
-/* --- Product Table (Index Page) --- */
+
 .product-table-card {
     background-color: var(--admin-white-bg, #fff);
     border-radius: 16px;
@@ -134,7 +132,6 @@
             transform: scale(1.1);
         }
 
-/* --- Product Form (Create/Edit) --- */
 .product-form-card {
     background: var(--admin-white-bg, #fff);
     border-radius: 16px;

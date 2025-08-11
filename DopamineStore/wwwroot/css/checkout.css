@@ -1,9 +1,4 @@
-﻿/*
-=========================================
-    Checkout Page Styles
-=========================================
-*/
-
+﻿
 .checkout-page {
     padding: 80px 0;
 }
@@ -22,7 +17,6 @@
         margin-bottom: 1.5rem;
     }
 
-/* --- Payment Methods --- */
 .payment-methods {
     display: grid;
     gap: 1rem;
@@ -60,13 +54,12 @@
         margin-left: 1rem;
     }
 
-/* --- Order Summary --- */
 .order-summary-card .total-line {
     border-top: 2px solid var(--primary-color);
     padding-top: 1rem;
 }
 
-/* --- Coupon Card --- */
+
 .coupon-card {
     background: #fff;
     padding: 2rem;

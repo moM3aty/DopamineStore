@@ -39,6 +39,7 @@ namespace DopamineStore.Areas.Admin.Controllers
             {
                 productsQuery = productsQuery.Where(p => p.CategoryId == categoryId.Value);
             }
+            productsQuery = productsQuery.OrderByDescending(p => p.Id);
 
             ViewBag.Categories = new SelectList(await _context.Categories.OrderBy(c => c.Name).ToListAsync(), "Id", "Name", categoryId);
             return View(await productsQuery.ToListAsync());

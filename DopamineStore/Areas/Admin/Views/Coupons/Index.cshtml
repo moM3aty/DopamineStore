@@ -41,10 +41,7 @@
                         </td>
                         <td class="text-end action-buttons">
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="تعديل"><i class="fas fa-pencil-alt"></i></a>
-                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا الكوبون؟');">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف"><i class="fas fa-trash"></i></button>
-                            </form>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 }

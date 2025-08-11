@@ -1,10 +1,6 @@
 ﻿(function () {
     "use strict";
 
-    /**
-     * Helper function to convert Western Arabic numerals (1, 2, 3)
-     * to Eastern Arabic numerals (١, ٢, ٣).
-     */
     const toEasternArabicNumerals = (str) => {
         if (str === null || str === undefined) return '';
         let numStr = String(str);
@@ -12,9 +8,7 @@
         return numStr.replace(/[0-9]/g, w => arabicNumerals[+w]);
     };
 
-    /**
-     * Easy selector helper function
-     */
+  
     const select = (el, all = false) => {
         el = el.trim()
         if (all) {
@@ -24,9 +18,6 @@
         }
     }
 
-    /**
-     * Easy event listener function
-     */
     const on = (type, el, listener, all = false) => {
         let selectEl = select(el, all)
         if (selectEl) {
@@ -38,16 +29,12 @@
         }
     }
 
-    /**
-     * Easy on scroll event listener 
-     */
+
     const onscroll = (el, listener) => {
         el.addEventListener('scroll', listener)
     }
 
-    /**
-     * Scrolls to an element with header offset
-     */
+
     const scrollto = (el) => {
         let header = select('#header')
         let offset = header ? header.offsetHeight : 0;
@@ -59,9 +46,7 @@
         })
     }
 
-    /**
-     * Preloader
-     */
+
     let preloader = select('#preloader');
     if (preloader) {
         window.addEventListener('load', () => {
@@ -69,9 +54,7 @@
         });
     }
 
-    /**
-     * Back to top button functionality
-     */
+  
     let backtotop = select('.back-to-top')
     if (backtotop) {
         const toggleBacktotop = () => {
@@ -89,18 +72,13 @@
         });
     }
 
-    /**
-     * Mobile nav toggle
-     */
     on('click', '.mobile-nav-toggle', function (e) {
         select('body').classList.toggle('mobile-nav-active')
         this.classList.toggle('bi-list')
         this.classList.toggle('bi-x')
     })
 
-    /**
-     * Scrool with ofset on links with a class name .scrollto
-     */
+
     on('click', '.scrollto', function (e) {
         if (select(this.hash)) {
             e.preventDefault()
@@ -116,9 +94,6 @@
         }
     }, true)
 
-    /**
-     * Porfolio isotope and random filter
-     */
     document.addEventListener("DOMContentLoaded", function () {
         const filters = document.querySelectorAll("#portfolio-flters li");
         const products = document.querySelectorAll(".portfolio-item");
@@ -156,9 +131,7 @@
         });
     });
 
-    /**
-     * Countdown timer for special offers
-     */
+ 
     const initializeCountdown = () => {
         const countdowns = document.querySelectorAll('.countdown-timer, .countdown-timer-details');
         countdowns.forEach(countdown => {
@@ -189,9 +162,7 @@
     };
     window.addEventListener('load', initializeCountdown);
 
-    /**
-     * Product gallery thumbnail click handler
-     */
+ 
     on('click', '.thumbnail-item', function () {
         select('.thumbnail-item', true).forEach(item => item.classList.remove('active'));
         this.classList.add('active');
@@ -200,7 +171,6 @@
 
 })();
 
-// JQuery Dependent Functions
 $(document).ready(function () {
 
     const toEasternArabicNumerals = (str) => {
@@ -231,13 +201,13 @@ $(document).ready(function () {
         $('.current-price, .old-price, .sale-label, .featured-discount-badge, .offer-current-price, .offer-old-price, #cart-badge, .numeric-value').each(function () {
             var element = $(this);
             function traverse(node) {
-                if (node.nodeType === 3) { // Text node
+                if (node.nodeType === 3) { 
                     var text = node.nodeValue;
                     var convertedText = toEasternArabicNumerals(text);
                     if (text !== convertedText) {
                         node.nodeValue = convertedText;
                     }
-                } else if (node.nodeType === 1 && node.childNodes && node.nodeName.toLowerCase() !== 'script') { // Element node
+                } else if (node.nodeType === 1 && node.childNodes && node.nodeName.toLowerCase() !== 'script') { 
                     for (var i = 0; i < node.childNodes.length; i++) {
                         traverse(node.childNodes[i]);
                     }
@@ -260,7 +230,6 @@ $(document).ready(function () {
         });
     }
 
-    // Initial Load Actions
     updateCart();
     convertAllNumbersToArabic();
 
@@ -273,7 +242,6 @@ $(document).ready(function () {
         }
     }
 
-    // --- Add to Cart (from Product Card) ---
     $(document).on('click', '.btn-add-to-cart[data-product-id]', function (e) {
         if (!$(this).closest('form').length) {
             e.preventDefault();
@@ -294,7 +262,6 @@ $(document).ready(function () {
         }
     });
 
-    // --- Add to Cart from Modal ---
     $('#addToCartModalForm').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
@@ -319,7 +286,6 @@ $(document).ready(function () {
         });
     });
 
-    // --- Add to Cart from Product Details Page ---
     $('.add-to-cart-form').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
@@ -354,7 +320,6 @@ $(document).ready(function () {
         });
     });
 
-    // --- Wishlist Button ---
     $(document).on('click', '.wishlist-btn, .wishlist-btn-details', function (e) {
         e.preventDefault();
         var button = $(this);
@@ -387,7 +352,6 @@ $(document).ready(function () {
         });
     });
 
-    // --- Contact Form to WhatsApp ---
     $('#contact-form-whatsapp').on('submit', function (e) {
         e.preventDefault();
         var name = $('#Name').val();
@@ -401,7 +365,6 @@ $(document).ready(function () {
         window.open(whatsappUrl, '_blank');
     });
 
-    // --- Quantity Selector Logic (for both details page and modal) ---
     $(document).on('click', '.quantity-selector .quantity-plus', function () {
         var input = $(this).siblings('.quantity-input');
         var currentValue = parseInt(input.val());
@@ -420,7 +383,6 @@ $(document).ready(function () {
         }
     });
 
-    // --- Star Rating Input Logic (Product Details Page) ---
     if ($('.product-details-section').length) {
         $('.star-rating-input .bi').on('mouseover', function () {
             $(this).addClass('filled').prevAll().addClass('filled');

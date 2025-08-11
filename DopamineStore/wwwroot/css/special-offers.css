@@ -90,7 +90,6 @@
         font-family: var(--font-main);
     }
 
-/* Styles for Countdown on Product Details Page */
 .offer-ends-section {
     background-color: var(--light-bg);
     border-radius: var(--border-radius);

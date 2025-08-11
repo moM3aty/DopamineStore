@@ -1,10 +1,4 @@
-﻿/*
-=========================================
-    Admin Panel Theme & Variables
-=========================================
-*/
-
-:root {
+﻿:root {
     --primary-color: #A64B63;
     --secondary-color: #D98BA0;
     --accent-color: #F4E1E6;
@@ -24,10 +18,6 @@
     --danger-color: #e74a3b;
 }
 
-
-/* === Dashboard Enhancements === */
-
-/* Dashboard Stat Cards */
 .dashboard-stat-card {
     border-radius: var(--border-radius);
     border: none;
@@ -88,7 +78,6 @@
 }
 
 
-/* Dashboard List Cards (Top Products/Customers) */
 .list-card .card-header {
     font-weight: 700;
     color: var(--primary-color);
@@ -131,5 +120,5 @@
 .list-card .list-item-value {
     font-weight: 700;
     color: var(--success-color);
-    font-family: sans-serif; /* For better number rendering */
+    font-family: sans-serif; 
 }

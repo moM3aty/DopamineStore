@@ -63,9 +63,7 @@ main {
     font-size: 1rem;
 }
 
-/* User-Facing Layout  */
 
-/* Navbar */
 .navbar-brand {
     color: var(--primary-color) !important;
     font-weight: 700;
@@ -83,7 +81,6 @@ main {
         color: var(--primary-color) !important;
     }
 
-/* Hero Section */
 .hero-section {
     position: relative;
     padding: 8rem 0;
@@ -106,7 +103,6 @@ main {
     z-index: 1;
 }
 
-/* Category Section */
 .category-section {
     padding: 5rem 0;
     transition: background-color 0.3s ease;
@@ -142,7 +138,7 @@ main {
     font-size: 1.1rem;
 }
 
-/* Product Card */
+
 .product-card {
     border: 1px solid #e9ecef;
     border-radius: var(--border-radius);
@@ -230,7 +226,6 @@ main {
         border-right: 0;
     }
 
-/* Cart & Checkout Pages */
 .cart-item-row {
     transition: background-color 0.2s ease-in-out;
 }
@@ -325,7 +320,7 @@ main {
         margin-left: 0.75rem;
     }
 
-/* Footer */
+
 .footer-section {
     background-color: var(--dark-bg);
     color: rgba(255, 255, 255, 0.7);
@@ -405,8 +400,6 @@ main {
     margin-left: 1rem;
     width: 20px;
 }
-
-/* Admin Dashboard Layout  */
 
 
 .admin-body {
@@ -512,7 +505,7 @@ main {
         opacity: 0.3;
     }
 
-/* Responsive Styles  */
+
 
 @media (max-width: 992px) {
     .sidebar {
@@ -538,7 +531,7 @@ main {
     }
 }
 
-/*Review Star*/
+
 .star-rating-display .fa-star {
     color: #e9ecef;
 }
@@ -604,7 +597,7 @@ main {
     box-shadow: 0 5px 25px rgba(0,0,0,0.05);
 }
 
-/* Tab Navigation Styling */
+
 .nav-tabs .nav-link {
     border: none;
     border-bottom: 3px solid transparent;
@@ -619,7 +612,6 @@ main {
         background-color: transparent;
     }
 
-/* Form Styling */
 .form-section-title {
     font-family: 'Tajawal', sans-serif;
     font-weight: 700;
@@ -636,7 +628,7 @@ main {
     border-color: var(--primary-color, #A64B63);
 }
 
-/* Image Management Styling */
+
 .image-manager-card .card-header {
     background-color: #f8f9fa;
 }

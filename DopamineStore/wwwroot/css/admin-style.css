@@ -1,9 +1,4 @@
-﻿/*=======================================================
-    Main Stylesheet for Dopamine Store (Admin Area)
-    Version: 2.0 (Light & Feminine Theme)
-=======================================================*/
-
-/* --- ROOT VARIABLES --- */
+﻿
 :root {
     --admin-primary-color: #A64B63;
     --admin-secondary-color: #D98BA0;
@@ -19,7 +14,7 @@
     --admin-shadow: 0 4px 25px rgba(0,0,0,0.05);
 }
 
-/* --- GENERAL & LAYOUT --- */
+
 body.admin-body {
     font-family: 'Tajawal', sans-serif;
     background-color: var(--admin-light-bg);
@@ -110,7 +105,7 @@ body.admin-body {
     transition: margin-right 0.3s ease;
 }
 
-/* --- COMMON COMPONENTS --- */
+
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -164,7 +159,7 @@ body.admin-body {
     background-color: var(--admin-light-bg) !important;
 }
 
-/* --- DASHBOARD --- */
+
 .stat-card {
     border: none;
     border-radius: var(--admin-border-radius);
@@ -204,7 +199,6 @@ body.admin-body {
         opacity: 0.3;
     }
 
-/* --- TABLES --- */
 .table-card {
     overflow: hidden;
 }
@@ -247,7 +241,6 @@ body.admin-body {
         transform: scale(1.1);
     }
 
-/* --- FORMS --- */
 .form-control, .form-select {
     border-radius: 8px;
     border: 1px solid #d1d5db;

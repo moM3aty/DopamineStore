@@ -1,15 +1,8 @@
-﻿/*
-=========================================
-    Product Details Page Styles
-=========================================
-*/
-
-.product-details-section {
+﻿.product-details-section {
     padding-top: 120px;
     padding-bottom: 80px;
 }
 
-/* --- Product Gallery --- */
 .product-gallery .main-image-container {
     border-radius: var(--border-radius);
     overflow: hidden;
@@ -20,7 +13,6 @@
     .product-gallery .main-image-container img {
         width: 100%;
         aspect-ratio: 1 / 1;
-        object-fit: cover;
         transition: transform 0.5s ease;
     }
 
@@ -56,7 +48,6 @@
             display: block;
         }
 
-/* --- Product Info --- */
 .product-info {
     background: var(--white-bg);
     padding: 2rem;
@@ -103,7 +94,6 @@
     text-decoration: line-through;
 }
 
-/* --- Add to Cart & Wishlist Controls --- */
 .quantity-selector {
     display: flex;
     align-items: center;
@@ -154,7 +144,6 @@
     }
 
 
-/* --- Star Ratings --- */
 .star-rating-display .fa-star {
     color: #e9ecef;
 }
@@ -184,7 +173,6 @@
 }
 
 
-/* --- Reviews Section --- */
 .reviews-section {
     padding: 80px 0;
 }
@@ -233,7 +221,6 @@
         margin-bottom: 1.5rem;
     }
 
-/* --- Related Products Section --- */
 .related-products-section {
     padding: 80px 0;
 }

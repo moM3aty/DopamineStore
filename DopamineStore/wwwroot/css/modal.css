@@ -1,8 +1,4 @@
-﻿/*
-=========================================
-    Root Color & Font Variables
-=========================================
-*/
+﻿
 :root {
     --primary-color: #A64B63;
     --secondary-color: #D98BA0;
@@ -21,11 +17,7 @@
 }
 
 
-/*
-=========================================
-    Custom Modal Styles
-=========================================
-*/
+
 
 .custom-modal-content {
     border-radius: var(--border-radius);
@@ -51,7 +43,7 @@
         color: var(--white-text);
         opacity: 0.8;
         font-size: 1rem;
-        filter: brightness(0) invert(1); /* Ensures close button is white */
+        filter: brightness(0) invert(1); 
     }
 
         .modal-header .btn-close:hover {
@@ -94,7 +86,6 @@
         font-weight: 600;
     }
 
-/* Re-using the quantity selector style from product-details.css */
 .quantity-selector {
     display: flex;
     align-items: center;

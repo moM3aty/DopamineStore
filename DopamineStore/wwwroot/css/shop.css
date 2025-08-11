@@ -4,7 +4,7 @@
     padding-bottom: 80px;
 }
 
-/* --- Sidebar --- */
+
 .shop-sidebar {
     background: var(--white-bg);
     padding: 1.5rem;
@@ -37,7 +37,6 @@
         border-color: var(--primary-color);
     }
 
-/* --- Search Bar --- */
 .shop-search .form-control {
     border-radius: 0 50px  50px 0;
     border-left: none;
@@ -47,7 +46,6 @@
     border-radius:  50px 0 0 50px ;
 }
 
-/* --- Pagination --- */
 .pagination .page-item .page-link {
     color: var(--primary-color);
     border-radius: 50%;

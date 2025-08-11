@@ -1,10 +1,4 @@
-﻿/*
-=========================================
-    Admin Orders Page Styles
-=========================================
-*/
-
-/* --- Orders Table Card (Index Page) --- */
+﻿
 .order-table-card {
     background-color: var(--white-bg);
     border-radius: var(--border-radius);
@@ -19,16 +13,15 @@
 
     .order-row:hover {
         background-color: var(--light-bg) !important;
-        transform: scale(1.01); /* Subtle lift effect */
+        transform: scale(1.01); 
         box-shadow: 0 5px 15px rgba(0,0,0,0.07);
     }
 
-/* --- Status Badges (Used on Index & Details) --- */
 .status-badge {
     font-size: 0.75rem;
     padding: 0.5em 1em;
     font-weight: 700;
-    border-radius: 50px; /* Pill shape */
+    border-radius: 50px; 
 }
 
 .status-قيد-الانتظار, .status-قيد-المراجعة {
@@ -51,7 +44,6 @@
     color: var(--text-light) !important;
 }
 
-/* --- Buttons (Index Page) --- */
 .btn-view-details {
     background-color: var(--accent-color);
     border: 1px solid var(--accent-color);
@@ -69,11 +61,7 @@
     }
 
 
-/*
-=========================================
-    Order Details Page Styles - ENHANCED
-=========================================
-*/
+
 
 .content-card .content-card-header {
     padding: 1rem 1.5rem;
@@ -98,7 +86,7 @@
 
     .info-list li {
         display: flex;
-        align-items: center; /* Vertically align icon and text */
+        align-items: center;
         padding: 0.85rem 0;
         color: var(--text-light);
         border-bottom: 1px solid var(--border-color);
@@ -111,7 +99,7 @@
 
         .info-list li strong {
             color: var(--text-dark);
-            width: 90px; /* Fixed width for labels */
+            width: 90px; 
             flex-shrink: 0;
             font-weight: 600;
         }
@@ -137,7 +125,6 @@
     color: var(--text-dark);
 }
 
-/* Styling for the update status and actions cards */
 .input-group .form-select {
     border-top-right-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);

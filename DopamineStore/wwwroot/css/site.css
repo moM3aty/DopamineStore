@@ -1,11 +1,9 @@
 ﻿
-/* --- FONTS --- */
 @font-face {
     font-family: 'Hayah';
     src: url('../font/alfont_com_AlFont_com_Hayah-1.otf') format('opentype');
 }
 
-/* --- ROOT VARIABLES --- */
 :root {
     --primary-color: #A64B63;
     --secondary-color: #D98BA0;
@@ -23,7 +21,6 @@
     --transition-speed: 0.4s;
 }
 
-/* --- GENERAL STYLES --- */
 body {
     font-family: var(--font-main);
     color: var(--text-dark);
@@ -67,7 +64,6 @@ h1, h2, h3, h4, h5, h6 {
         color: var(--white-text);
     }
 
-/* --- HEADER & NAVIGATION --- */
 #header {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
@@ -133,7 +129,6 @@ h1, h2, h3, h4, h5, h6 {
     visibility: visible;
 }
 
-/* --- Mobile Navigation --- */
 .mobile-nav-toggle {
     color: var(--text-dark);
     font-size: 28px;
@@ -183,7 +178,6 @@ body.mobile-nav-active {
             transition: 0.3s;
         }
 
-/* --- HERO SECTION --- */
 #hero {
     width: 100%;
     height: 95vh;
@@ -230,7 +224,6 @@ body.mobile-nav-active {
     }
 }
 
-/* --- Back to Top Button --- */
 .back-to-top {
     position: fixed;
     visibility: hidden;

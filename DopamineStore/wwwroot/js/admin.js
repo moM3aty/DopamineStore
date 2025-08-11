@@ -1,5 +1,4 @@
-﻿// --- Initialize Product Edit Page Logic (Image Management & Category Modal) ---
-function initializeProductEditPage(productId) {
+﻿function initializeProductEditPage(productId) {
     const galleryContainer = document.getElementById('image-gallery-container');
     const imageUploadForm = document.getElementById('image-upload-form');
     const deleteModalElement = document.getElementById('deleteImageModal');
@@ -7,7 +6,6 @@ function initializeProductEditPage(productId) {
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     let imageIdToDelete = null;
 
-    // Event delegation for delete and set-main-image buttons
     galleryContainer.addEventListener('click', function (e) {
         const deleteBtn = e.target.closest('.delete-image-btn');
         const setMainBtn = e.target.closest('.set-main-image-btn');
@@ -23,14 +21,12 @@ function initializeProductEditPage(productId) {
         }
     });
 
-    // Confirm delete button inside the modal
     confirmDeleteBtn.addEventListener('click', function () {
         if (imageIdToDelete) {
             deleteImage(imageIdToDelete);
         }
     });
 
-    // Handle new image uploads
     imageUploadForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -106,7 +102,6 @@ function initializeProductEditPage(productId) {
     }
 }
 
-// --- Handle returning to tab via hash on page load ---
 document.addEventListener("DOMContentLoaded", function () {
     const hash = window.location.hash;
     if (hash) {
@@ -116,7 +111,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // --- Category Modal (for Create/Edit Product pages) ---
     const addCategoryModalElement = document.getElementById('addCategoryModal');
     if (addCategoryModalElement) {
         const saveCategoryBtn = document.getElementById('saveCategoryBtn');

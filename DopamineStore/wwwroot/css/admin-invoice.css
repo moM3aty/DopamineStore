@@ -1,8 +1,4 @@
-﻿/*
-=========================================
-    Advanced & Attractive Admin Invoice Styles
-=========================================
-*/
+﻿
 :root {
     --primary-color: #A64B63;
     --secondary-color: #D98BA0;
@@ -37,7 +33,7 @@ body {
 .invoice-paper {
     background: var(--white-bg);
     border-radius: 8px;
-    padding: 0; /* Remove padding to allow header to be full-width */
+    padding: 0; 
     box-shadow: 0 10px 45px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;

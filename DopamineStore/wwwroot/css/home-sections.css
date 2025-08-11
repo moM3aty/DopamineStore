@@ -1,10 +1,9 @@
 ﻿
-/* --- General Section Styling --- */
+
 .section-bg {
     background-color: var(--light-bg);
 }
 
-/* --- About Section --- */
 .about {
     padding: 80px 0;
 }
@@ -29,14 +28,13 @@
         .about .content ul i {
             color: var(--secondary-color);
             font-size: 22px;
-            margin-left: 8px; /* For RTL */
+            margin-left: 8px; 
         }
 
     .about .content p:last-child {
         margin-bottom: 0;
     }
 
-/* --- Courses Section --- */
 .courses {
     padding: 80px 0;
     border-top: 1px solid var(--border-color);

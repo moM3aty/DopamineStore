@@ -4,7 +4,7 @@
     padding-bottom: 80px;
 }
 
-/* --- Cart Item --- */
+
 .cart-item {
     background: var(--white-bg);
     border-radius: var(--border-radius);
@@ -60,7 +60,6 @@
         color: var(--danger-color, #e74c3c);
     }
 
-/* --- Summary Card --- */
 .cart-summary, .order-summary-card {
     background: var(--white-bg);
     border-radius: var(--border-radius);
@@ -88,7 +87,7 @@
         margin-top: 1rem;
     }
 
-/* --- Checkout Form --- */
+
 .checkout-form-card {
     background: var(--white-bg);
     border-radius: var(--border-radius);
@@ -114,7 +113,7 @@
         box-shadow: 0 0 0 0.25rem var(--accent-color);
     }
 
-/* Payment Methods */
+
 .payment-methods {
     display: grid;
     gap: 1rem;
