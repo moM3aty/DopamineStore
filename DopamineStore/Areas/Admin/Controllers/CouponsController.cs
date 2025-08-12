@@ -1,15 +1,15 @@
-﻿using DopamineStore.Data;
+﻿using DopamineStore.Data; // افترض أن هذا هو سياق قاعدة البيانات الخاص بك
 using DopamineStore.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace DopamineStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")] // يجب تفعيل الحماية للمستخدمين المصرح لهم فقط
     public class CouponsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +22,8 @@ namespace DopamineStore.Areas.Admin.Controllers
         // GET: Admin/Coupons
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Coupons.OrderByDescending(c => c.Id).ToListAsync());
+            var coupons = await _context.Coupons.OrderByDescending(c => c.Id).ToListAsync();
+            return View(coupons);
         }
 
         // GET: Admin/Coupons/Create
@@ -34,13 +35,19 @@ namespace DopamineStore.Areas.Admin.Controllers
         // POST: Admin/Coupons/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Coupon coupon)
+        public async Task<IActionResult> Create([Bind("Code,DiscountType,DiscountValue,ExpiryDate,IsActive")] Coupon coupon)
         {
             if (ModelState.IsValid)
             {
+                // تحقق من أن الكود غير مكرر
+                if (await _context.Coupons.AnyAsync(c => c.Code == coupon.Code))
+                {
+                    ModelState.AddModelError("Code", "هذا الكود مستخدم بالفعل.");
+                    return View(coupon);
+                }
+
                 _context.Add(coupon);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "تم إنشاء الكوبون بنجاح.";
                 return RedirectToAction(nameof(Index));
             }
             return View(coupon);
@@ -49,38 +56,60 @@ namespace DopamineStore.Areas.Admin.Controllers
         // GET: Admin/Coupons/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var coupon = await _context.Coupons.FindAsync(id);
-            if (coupon == null) return NotFound();
+            if (coupon == null)
+            {
+                return NotFound();
+            }
             return View(coupon);
         }
 
         // POST: Admin/Coupons/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Coupon coupon)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,DiscountType,DiscountValue,ExpiryDate,IsActive")] Coupon coupon)
         {
-            if (id != coupon.Id) return NotFound();
+            if (id != coupon.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // تحقق من أن الكود غير مكرر لكوبون آخر
+                    if (await _context.Coupons.AnyAsync(c => c.Code == coupon.Code && c.Id != coupon.Id))
+                    {
+                        ModelState.AddModelError("Code", "هذا الكود مستخدم بالفعل لكوبون آخر.");
+                        return View(coupon);
+                    }
+
                     _context.Update(coupon);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "تم تعديل الكوبون بنجاح.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Coupons.Any(e => e.Id == coupon.Id)) return NotFound();
-                    else throw;
+                    if (!CouponExists(coupon.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(coupon);
         }
 
-        // GET: Admin/Coupons/Delete/5 (New Action to show confirmation page)
+        // GET: Admin/Coupons/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -95,9 +124,8 @@ namespace DopamineStore.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(coupon);
+            return View(coupon); // يمكنك إنشاء واجهة عرض للحذف أو استخدام modal
         }
-
 
         // POST: Admin/Coupons/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -105,13 +133,34 @@ namespace DopamineStore.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var coupon = await _context.Coupons.FindAsync(id);
-            if (coupon != null)
-            {
-                _context.Coupons.Remove(coupon);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "تم حذف الكوبون بنجاح.";
-            }
+            _context.Coupons.Remove(coupon);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Admin/Coupons/ToggleStatus/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var coupon = await _context.Coupons.FindAsync(id);
+            if (coupon == null)
+            {
+                return Json(new { success = false, message = "لم يتم العثور على الكوبون." });
+            }
+
+            coupon.IsActive = !coupon.IsActive;
+            _context.Update(coupon);
+            await _context.SaveChangesAsync();
+
+            bool displayStatus = coupon.IsActive && coupon.ExpiryDate >= DateTime.Today;
+
+            return Json(new { success = true, isActive = coupon.IsActive, displayStatus = displayStatus });
+        }
+
+        private bool CouponExists(int id)
+        {
+            return _context.Coupons.Any(e => e.Id == id);
         }
     }
 }

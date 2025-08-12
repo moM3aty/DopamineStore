@@ -16,7 +16,7 @@
     --warning: #f59e0b;
     --danger: #ef4444;
     --info: #3b82f6;
-    --font-main: 'Tajawal', sans-serif;
+    --font-main: 'Tajawal', sans-serif !important;
     --border-radius: 16px;
     --spacing-unit: 1.5rem;
     --sidebar-width: 260px;

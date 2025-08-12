@@ -1,7 +1,24 @@
 ﻿@model IEnumerable<DopamineStore.Models.Coupon>
+@using System.Globalization
+@using System.Text
+@functions {
+    public static string ToArabicNumerals(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+        return new StringBuilder(input)
+            .Replace('0', '٠').Replace('1', '١').Replace('2', '٢').Replace('3', '٣').Replace('4', '٤')
+            .Replace('5', '٥').Replace('6', '٦').Replace('7', '٧').Replace('8', '٨').Replace('9', '٩').ToString();
+    }
+}
 @{
     ViewData["Title"] = "إدارة الكوبونات";
+    var arabicCulture = new CultureInfo("ar-EG");
 }
+
+@Html.AntiForgeryToken()
+
+<link href="~/css/admin-coupons.css" rel="stylesheet" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 
 <div class="page-header">
     <h1>@ViewData["Title"]</h1>
@@ -10,7 +27,7 @@
 
 <div class="content-card table-card">
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle professional-table">
             <thead>
                 <tr>
                     <th>الكود</th>
@@ -22,30 +39,89 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (!Model.Any())
                 {
                     <tr>
-                        <td class="fw-bold">@item.Code</td>
-                        <td>@Html.DisplayFor(modelItem => item.DiscountType)</td>
-                        <td>@item.DiscountValue.ToString("N0") @(item.DiscountType == DiscountType.Percentage ? "%" : "ج.م.")</td>
-                        <td>@item.ExpiryDate.ToShortDateString()</td>
-                        <td>
-                            @if (item.IsActive && item.ExpiryDate >= DateTime.Today)
-                            {
-                                <span class="badge bg-success">فعال</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">غير فعال</span>
-                            }
-                        </td>
-                        <td class="text-end action-buttons">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="تعديل"><i class="fas fa-pencil-alt"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف"><i class="fas fa-trash"></i></a>
-                        </td>
+                        <td colspan="6" class="text-center py-4">لا توجد كوبونات لعرضها.</td>
                     </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        var isExpired = item.ExpiryDate < DateTime.Today;
+                        var displayStatusActive = item.IsActive && !isExpired;
+                        <tr>
+                            <td class="fw-bold">@item.Code</td>
+                            <td>@Html.DisplayFor(modelItem => item.DiscountType)</td>
+                            <td>@ToArabicNumerals(item.DiscountValue.ToString("N0")) @(item.DiscountType == DiscountType.Percentage ? "%" : "ج.م.")</td>
+                            <td>@ToArabicNumerals(item.ExpiryDate.ToString("dd/MM/yyyy", arabicCulture))</td>
+                            <td>
+                                <div class="form-check form-switch status-toggle">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="status-toggle-@item.Id" data-id="@item.Id" @(item.IsActive ? "checked" : "") @(isExpired ? "disabled" : "")>
+                                    <label class="form-check-label status-label @(displayStatusActive ? "active" : "inactive")" for="status-toggle-@item.Id" id="status-label-@item.Id">
+                                        @if (isExpired)
+                                        {
+                                            <span class="text-danger">منتهي الصلاحية</span>
+                                        }
+                                        else
+                                        {
+                                            @(displayStatusActive ? "فعال" : "غير فعال")
+                                        }
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="text-end action-buttons">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="تعديل"><i class="fas fa-pencil-alt"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.status-toggle .form-check-input').on('change', function() {
+                var checkbox = $(this);
+                var couponId = checkbox.data('id');
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                checkbox.prop('disabled', true);
+
+                $.ajax({
+                    url: '/Admin/Coupons/ToggleStatus/' + couponId,
+                    type: 'POST',
+                    headers: { 'RequestVerificationToken': token },
+                    success: function(response) {
+                        if (response.success) {
+                            var label = $('#status-label-' + couponId);
+
+                            if (response.displayStatus) {
+                                label.text('فعال').removeClass('inactive').addClass('active');
+                            } else {
+                                label.text('غير فعال').removeClass('active').addClass('inactive');
+                            }
+
+                            checkbox.prop('checked', response.isActive);
+                        } else {
+                            alert(response.message || 'حدث خطأ أثناء تحديث الحالة.');
+                            checkbox.prop('checked', !checkbox.prop('checked'));
+                        }
+                    },
+                    error: function() {
+                        alert('فشل الاتصال بالخادم. يرجى المحاولة مرة أخرى.');
+                        checkbox.prop('checked', !checkbox.prop('checked')); 
+                    },
+                    complete: function() {
+                        checkbox.prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+}

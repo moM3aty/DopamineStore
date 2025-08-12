@@ -1,6 +1,28 @@
 ﻿@model IEnumerable<Order>
+@using System.Globalization
+@using System.Text
+@functions {
+    // Function to convert Latin numerals (0-9) to Eastern Arabic numerals (٠-٩)
+    public static string ToArabicNumerals(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+        return new StringBuilder(input)
+            .Replace('0', '٠')
+            .Replace('1', '١')
+            .Replace('2', '٢')
+            .Replace('3', '٣')
+            .Replace('4', '٤')
+            .Replace('5', '٥')
+            .Replace('6', '٦')
+            .Replace('7', '٧')
+            .Replace('8', '٨')
+            .Replace('9', '٩').ToString();
+    }
+}
 @{
     ViewData["Title"] = "إدارة الطلبات";
+    // Set culture for currency and date formatting
+    var arabicCulture = new CultureInfo("ar-EG");
 }
 
 <div class="page-header">
@@ -39,10 +61,10 @@
                 @foreach (var item in Model)
                 {
                     <tr class="order-row">
-                        <td class="fw-bold">#@item.Id</td>
+                        <td class="fw-bold">#@ToArabicNumerals(item.Id.ToString())</td>
                         <td>@item.CustomerName</td>
-                        <td>@item.OrderDate.ToString("yyyy/MM/dd")</td>
-                        <td class="fw-bold text-success">@item.TotalAmount.ToString("C")</td>
+                        <td>@ToArabicNumerals(item.OrderDate.ToString("dd/MM/yyyy", arabicCulture))</td>
+                        <td class="fw-bold text-success">@ToArabicNumerals(item.TotalAmount.ToString("C0", arabicCulture))</td>
                         <td><span class="badge rounded-pill status-badge status-@item.OrderStatus.ToLower().Replace(" ", "-")">@item.OrderStatus</span></td>
                         <td class="text-end">
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-view-details">عرض التفاصيل</a>

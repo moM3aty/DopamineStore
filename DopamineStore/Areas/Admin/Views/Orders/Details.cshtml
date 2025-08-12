@@ -1,6 +1,28 @@
 ﻿@model Order
+@using System.Globalization
+@using System.Text
+@functions {
+    // Function to convert Latin numerals (0-9) to Eastern Arabic numerals (٠-٩)
+    public static string ToArabicNumerals(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+        return new StringBuilder(input)
+            .Replace('0', '٠')
+            .Replace('1', '١')
+            .Replace('2', '٢')
+            .Replace('3', '٣')
+            .Replace('4', '٤')
+            .Replace('5', '٥')
+            .Replace('6', '٦')
+            .Replace('7', '٧')
+            .Replace('8', '٨')
+            .Replace('9', '٩').ToString();
+    }
+}
 @{
-    ViewData["Title"] = "تفاصيل الطلب #" + Model.Id;
+    // Set culture for currency and date formatting
+    var arabicCulture = new CultureInfo("ar-EG");
+    ViewData["Title"] = "تفاصيل الطلب #" + ToArabicNumerals(Model.Id.ToString());
 }
 
 <div class="page-header">
@@ -31,16 +53,16 @@
                             {
                                 <tr>
                                     <td class="product-name">@(detail.Product?.Name ?? "منتج محذوف")</td>
-                                    <td class="text-center">x @detail.Quantity</td>
-                                    <td class="text-center">@detail.UnitPrice.ToString("C")</td>
-                                    <td class="text-end fw-bold">@((detail.Quantity * detail.UnitPrice).ToString("C"))</td>
+                                    <td class="text-center">x @ToArabicNumerals(detail.Quantity.ToString())</td>
+                                    <td class="text-center">@ToArabicNumerals(detail.UnitPrice.ToString("C0", arabicCulture))</td>
+                                    <td class="text-end fw-bold">@ToArabicNumerals((detail.Quantity * detail.UnitPrice).ToString("C0", arabicCulture))</td>
                                 </tr>
                             }
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="3" class="text-end border-0 p-3"><strong>الإجمالي النهائي للطلب:</strong></td>
-                                <td class="text-end border-0 p-3 h5 text-success"><strong>@Model.TotalAmount.ToString("C")</strong></td>
+                                <td class="text-end border-0 p-3 h5 text-success"><strong>@ToArabicNumerals(Model.TotalAmount.ToString("C0", arabicCulture))</strong></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -69,7 +91,7 @@
                 <ul class="info-list">
                     <li><i class="fas fa-user"></i> <strong>الاسم:</strong> <span>@Model.CustomerName</span></li>
                     <li><i class="fas fa-envelope"></i> <strong>البريد:</strong> <span>@Model.CustomerEmail</span></li>
-                    <li><i class="fas fa-phone"></i> <strong>الهاتف:</strong> <span>@Model.PhoneNumber</span></li>
+                    <li><i class="fas fa-phone"></i> <strong>الهاتف:</strong> <span style="direction: ltr; display: inline-block;">@ToArabicNumerals(Model.PhoneNumber)</span></li>
                     <li><i class="fas fa-map-marker-alt"></i> <strong>العنوان:</strong> <span>@Model.ShippingAddress</span></li>
                     <li><i class="fas fa-map-pin"></i> <strong>المنطقة:</strong> <span>@Model.City</span></li>
                     <li><i class="fas fa-shipping-fast"></i> <strong>الحالة:</strong> <span><span class="badge rounded-pill status-badge status-@Model.OrderStatus.ToLower().Replace(" ", "-")">@Model.OrderStatus</span></span></li>

@@ -1,16 +1,42 @@
 ﻿@model DashboardViewModel
 @using System.Globalization
-
+@using System.Text
+@functions {
+    // Function to convert Latin numerals (0-9) to Eastern Arabic numerals (٠-٩)
+    public static string ToArabicNumerals(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+        return new StringBuilder(input)
+            .Replace('0', '٠')
+            .Replace('1', '١')
+            .Replace('2', '٢')
+            .Replace('3', '٣')
+            .Replace('4', '٤')
+            .Replace('5', '٥')
+            .Replace('6', '٦')
+            .Replace('7', '٧')
+            .Replace('8', '٨')
+            .Replace('9', '٩').ToString();
+    }
+}
+@{
+    // Set culture for currency and date formatting
+    var arabicCulture = new CultureInfo("ar-EG");
+}
 @{
     ViewData["Title"] = "لوحة التحكم الرئيسية";
+    var currentCulture = CultureInfo.CurrentUICulture;
+    // Generate month labels for the last 12 months in the current UI culture
     var monthLabels = Enumerable.Range(0, 12)
-        .Select(i => DateTime.Now.AddMonths(-(11 - i)).ToString("MMMM", new CultureInfo("ar-EG")))
+        .Select(i => DateTime.Now.AddMonths(-(11 - i)).ToString("MMMM", currentCulture))
         .ToList();
+    // Generate day labels for the last 7 days in the current UI culture
     var dayLabels = Enumerable.Range(0, 7)
-        .Select(i => DateTime.Now.AddDays(-(6 - i)).ToString("dddd", new CultureInfo("ar-EG")))
+        .Select(i => DateTime.Now.AddDays(-(6 - i)).ToString("dddd", currentCulture))
         .ToList();
 }
 
+<!-- Low Stock Warning Alert -->
 @if (TempData["LowStockWarning"] != null)
 {
     <div class="alert alert-warning">
@@ -26,37 +52,39 @@
     <h1>@ViewData["Title"]</h1>
 </div>
 
+<!-- Statistics Cards Grid -->
 <div class="dashboard-grid grid-cols-4">
     <div class="stat-card">
         <div class="stat-card-header">
             <div class="stat-card-icon-wrapper"><i class="fas fa-dollar-sign"></i></div>
             <p class="stat-card-title">إجمالي المبيعات</p>
         </div>
-        <p class="stat-card-value">@Model.TotalSales.ToString("C0", new CultureInfo("ar-EG"))</p>
+        <p class="stat-card-value">@ToArabicNumerals(Model.TotalSales.ToString("C0", arabicCulture))</p>
     </div>
     <div class="stat-card">
         <div class="stat-card-header">
             <div class="stat-card-icon-wrapper"><i class="fas fa-calendar-day"></i></div>
             <p class="stat-card-title">مبيعات اليوم</p>
         </div>
-        <p class="stat-card-value">@Model.SalesToday.ToString("C0", new CultureInfo("ar-EG"))</p>
+        <p class="stat-card-value">@ToArabicNumerals(Model.SalesToday.ToString("C0", arabicCulture))</p>
     </div>
     <div class="stat-card">
         <div class="stat-card-header">
             <div class="stat-card-icon-wrapper"><i class="fas fa-clipboard-list"></i></div>
             <p class="stat-card-title">إجمالي الطلبات</p>
         </div>
-        <p class="stat-card-value">@Model.TotalOrders.ToString("N0", new CultureInfo("ar-EG"))</p>
+        <p class="stat-card-value">@ToArabicNumerals(Model.TotalOrders.ToString("N0"))</p>
     </div>
     <div class="stat-card">
         <div class="stat-card-header">
             <div class="stat-card-icon-wrapper"><i class="fas fa-chart-pie"></i></div>
             <p class="stat-card-title">متوسط قيمة الطلب</p>
         </div>
-        <p class="stat-card-value">@Model.AverageOrderValue.ToString("C0", new CultureInfo("ar-EG"))</p>
+        <p class="stat-card-value">@ToArabicNumerals(Model.AverageOrderValue.ToString("C0", arabicCulture))</p>
     </div>
 </div>
 
+<!-- Charts Grid -->
 <div class="dashboard-grid grid-cols-2">
     <div class="dashboard-card">
         <div class="card-header"><i class="fas fa-chart-area"></i>المبيعات خلال آخر 12 شهر</div>
@@ -68,7 +96,8 @@
     </div>
 </div>
 
-<div class="dashboard-grid  grid-cols-2">
+<!-- Top Categories & Products Grid -->
+<div class="dashboard-grid grid-cols-2">
     <div class="dashboard-card">
         <div class="card-header"><i class="fas fa-tags"></i>الأقسام الأكثر مبيعاً</div>
         <div class="card-body"><div class="chart-container"><canvas id="categorySalesChart"></canvas></div></div>
@@ -84,7 +113,7 @@
                             <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://placehold.co/100x100/A64B63/fceef2?text=P" : product.ImageUrl)" class="list-item-img" alt="Product Image">
                             <span class="list-item-name">@product.ProductName</span>
                         </div>
-                        <span class="list-item-value value-accent">@product.UnitsSold.ToString("N0", new CultureInfo("ar-EG")) قطعة</span>
+                        <span class="list-item-value value-accent">@ToArabicNumerals(product.UnitsSold.ToString("N0")) قطعة</span>
                     </li>
                 }
             </ul>
@@ -92,6 +121,7 @@
     </div>
 </div>
 
+<!-- Top Customers & Order Status Grid -->
 <div class="dashboard-grid grid-cols-2">
     <div class="dashboard-card">
         <div class="card-header"><i class="fas fa-crown"></i>أفضل العملاء</div>
@@ -101,7 +131,7 @@
                 {
                     <li class="list-item">
                         <span class="list-item-name">@customer.CustomerName</span>
-                        <span class="list-item-value value-primary">@customer.TotalSpent.ToString("C0", new CultureInfo("ar-EG"))</span>
+                        <span class="list-item-value value-primary">@ToArabicNumerals(customer.TotalSpent.ToString("C0", arabicCulture))</span>
                     </li>
                 }
             </ul>
@@ -115,6 +145,7 @@
     </div>
 </div>
 
+<!-- Recent Orders Table -->
 <div class="dashboard-card">
     <div class="card-header"><i class="fas fa-history"></i>آخر الطلبات</div>
     <div class="card-body">
@@ -136,10 +167,10 @@
                         @foreach (var order in Model.RecentOrders)
                         {
                             <tr>
-                                <td>#@order.Id.ToString(new CultureInfo("ar-EG"))</td>
+                                <td>#@ToArabicNumerals(order.Id.ToString())</td>
                                 <td>@order.CustomerName</td>
-                                <td>@order.OrderDate.ToString("g", new CultureInfo("ar-EG"))</td>
-                                <td>@order.TotalAmount.ToString("C", new CultureInfo("ar-EG"))</td>
+                                <td>@order.OrderDate.ToString("g", arabicCulture)</td>
+                                <td>@ToArabicNumerals(order.TotalAmount.ToString("C0", arabicCulture))</td>
                                 <td>
                                     <span class="status-badge status-@order.OrderStatus.ToLower().Replace(" ", "-").Replace(" ", "")">@order.OrderStatus</span>
                                 </td>
@@ -164,17 +195,24 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            if (typeof Chart === 'undefined') { return; }
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js is not loaded.");
+                return;
+            }
 
+            // Function to convert numbers to Arabic numerals for chart tooltips
             const toArabicNumerals = (num) => {
                 if (num === null || num === undefined) return '';
                 const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                // Use 'en-US' locale in toLocaleString to ensure standard digit grouping before replacement
                 return num.toLocaleString('en-US').replace(/[0-9]/g, (d) => arabicNumerals[parseInt(d)]);
             };
 
+            // Chart defaults
             Chart.defaults.font.family = 'Tajawal', 'sans-serif';
             Chart.defaults.color = '#d1c5c9';
 
+            // Theme colors for charts
             const themeColors = {
                 primary: '#A64B63',
                 secondary: '#594A4E',
@@ -186,6 +224,7 @@
                 info: '#3b82f6'
             };
 
+            // Reusable tooltip configuration factory
             const createTooltip = (currency = 'ج.م', unit = '') => ({
                 backgroundColor: 'rgba(10, 25, 47, 0.85)',
                 backdropFilter: 'blur(5px)',

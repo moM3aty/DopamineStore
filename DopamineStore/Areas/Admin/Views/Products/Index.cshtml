@@ -1,6 +1,28 @@
 ﻿@model IEnumerable<DopamineStore.Models.Product>
+@using System.Globalization
+@using System.Text
+@functions {
+    // Function to convert Latin numerals (0-9) to Eastern Arabic numerals (٠-٩)
+    public static string ToArabicNumerals(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+        return new StringBuilder(input)
+            .Replace('0', '٠')
+            .Replace('1', '١')
+            .Replace('2', '٢')
+            .Replace('3', '٣')
+            .Replace('4', '٤')
+            .Replace('5', '٥')
+            .Replace('6', '٦')
+            .Replace('7', '٧')
+            .Replace('8', '٨')
+            .Replace('9', '٩').ToString();
+    }
+}
 @{
     ViewData["Title"] = "إدارة المنتجات";
+    // Set culture for currency and date formatting
+    var arabicCulture = new CultureInfo("ar-EG");
 }
 
 <div class="product-management-header">
@@ -57,11 +79,11 @@
                         <td class="p-3 price-cell">
                             @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
                             {
-                                <span class="old-price">@item.OldPrice.Value.ToString("C")</span>
+                                <span class="old-price">@ToArabicNumerals(item.OldPrice.Value.ToString("C0", arabicCulture))</span>
                             }
-                            <span class="current-price">@item.Price.ToString("C")</span>
+                            <span class="current-price">@ToArabicNumerals(item.Price.ToString("C0", arabicCulture))</span>
                         </td>
-                        <td class="p-3">@item.StockQuantity</td>
+                        <td class="p-3">@ToArabicNumerals(item.StockQuantity.ToString())</td>
                         <td class="p-3">
                             @if (item.IsFeatured)
                             {

@@ -1,4 +1,4 @@
-using DopamineStore.Data;
+﻿using DopamineStore.Data;
 using DopamineStore.Models;
 using DopamineStore.Services;
 using Microsoft.AspNetCore.Identity;
@@ -15,20 +15,24 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[] { new CultureInfo("ar-EG") };
-    options.DefaultRequestCulture = new RequestCulture("ar-EG");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
-});
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 
-
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+
+var arabicCulture = new CultureInfo("ar-EG");
+arabicCulture.NumberFormat.NativeDigits = "٠١٢٣٤٥٦٧٨٩".Select(c => c.ToString()).ToArray();
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(arabicCulture);
+    options.SupportedCultures = new[] { arabicCulture };
+    options.SupportedUICultures = new[] { arabicCulture };
+});
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -39,13 +43,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-var supportedCultures = new[] { new CultureInfo("ar-EG") };
-app.UseRequestLocalization(new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture("ar-EG"),
-    SupportedCultures = supportedCultures,
-    SupportedUICultures = supportedCultures
-});
+app.UseRequestLocalization();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -58,7 +56,6 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-app.UseRequestLocalization();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
