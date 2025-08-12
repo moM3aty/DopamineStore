@@ -28,34 +28,83 @@
     </form>
 </div>
 
-<div class="row gy-4">
-    @foreach (var item in Model)
+<div class="reviews-container">
+    @if (Model.Any())
     {
-        <div class="col-lg-4 col-md-6">
-            <div class="review-card">
-                <div class="review-card-header">
+        @foreach (var item in Model)
+        {
+            <div class="review-admin-card" id="review-card-@item.Id">
+                <div class="review-card-main">
                     <div class="review-product-info">
-                        <a class="product-link" asp-action="Edit" asp-controller="Products" asp-route-id="@item.ProductId">@item.Product.Name</a>
-                        <div class="review-rating mt-1">
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                <i class="fas fa-star @(i <= item.Rating ? "filled" : "")"></i>
-                            }
+                        <img src="@(string.IsNullOrEmpty(item.Product?.ImageUrl) ? "https://placehold.co/100x100/F4E1E6/A64B63?text=P" : item.Product.ImageUrl)" alt="@item.Product?.Name">
+                        <div>
+                            <a class="product-link" asp-action="Edit" asp-controller="Products" asp-route-id="@item.ProductId">@item.Product?.Name</a>
+                            <div class="review-rating-display">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fas fa-star @(i <= item.Rating ? "filled" : "")"></i>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <form asp-action="ToggleApproval" asp-route-id="@item.Id" method="post" class="approval-form">
-                        @Html.AntiForgeryToken()
-                        <div class="form-check form-switch approval-switch" title="الموافقة على الظهور في الموقع">
-                            <input class="form-check-input" type="checkbox" data-id="@item.Id" @(item.IsApproved ? "checked" : "") onchange="this.form.submit()">
-                        </div>
-                    </form>
+                    <p class="review-comment">"@item.Comment"</p>
                 </div>
-                <p class="review-comment">"@item.Comment"</p>
                 <div class="review-card-footer">
-                    <span><i class="fas fa-user me-2"></i>@item.ReviewerName</span>
-                    <span><i class="fas fa-calendar-alt me-2"></i>@item.ReviewDate.ToShortDateString()</span>
+                    <div class="reviewer-info">
+                        <i class="fas fa-user"></i>
+                        <span>@item.ReviewerName</span>
+                        <span class="text-muted mx-2">|</span>
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>@item.ReviewDate.ToShortDateString()</span>
+                    </div>
+                    <div class="review-actions">
+                        <div class="form-check form-switch approval-switch" title="الموافقة على الظهور في الموقع">
+                            <input class="form-check-input" type="checkbox" data-id="@item.Id" @(item.IsApproved ? "checked" : "")>
+                        </div>
+                        <a asp-action="Delete" asp-controller="Reviews" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger btn-delete-review" title="حذف"><i class="fas fa-trash"></i></a>
+                    </div>
                 </div>
             </div>
+        }
+    }
+    else
+    {
+        <div class="content-card text-center p-5">
+            <p class="lead text-muted">لا توجد مراجعات تطابق معايير البحث الحالية.</p>
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.approval-switch .form-check-input').on('change', function() {
+                var checkbox = $(this);
+                var reviewId = checkbox.data('id');
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                var label = checkbox.siblings('.form-check-label');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/Reviews/ToggleApproval/' + reviewId,
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    data: { id: reviewId },
+                    success: function(response) {
+                        if (response.success) {
+                            label.text(response.newLabel);
+                        } else {
+                            checkbox.prop('checked', !checkbox.prop('checked'));
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        checkbox.prop('checked', !checkbox.prop('checked'));
+                        alert('حدث خطأ أثناء تحديث الحالة.');
+                    }
+                });
+            });
+        });
+    </script>
+}

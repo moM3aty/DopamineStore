@@ -56,7 +56,6 @@ namespace DopamineStore.Controllers
 
             return View(viewModel);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlaceOrder(CheckoutViewModel model)
@@ -127,6 +126,11 @@ namespace DopamineStore.Controllers
             _context.Orders.Add(order);
             _context.CartItems.RemoveRange(model.CartItems);
             await _context.SaveChangesAsync();
+
+            if (model.PaymentMethod == "Instapay" || model.PaymentMethod == "Wallet")
+            {
+                return RedirectToAction("Index", "Payment", new { orderId = order.Id });
+            }
 
             return RedirectToAction("Confirmation", new { id = order.Id });
         }

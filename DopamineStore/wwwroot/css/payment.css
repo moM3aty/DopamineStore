@@ -1,0 +1,120 @@
+﻿
+@font-face {
+    font-family: 'Hayah';
+    src: url('../font/alfont_com_AlFont_com_Hayah-1.otf') format('opentype');
+}
+
+:root {
+    --primary-color: #A64B63;
+    --secondary-color: #D98BA0;
+    --accent-color: #F4E1E6;
+    --light-bg: #FCF8F9;
+    --white-bg: #ffffff;
+    --text-dark: #594A4E;
+    --text-light: #8C7F84;
+    --border-color: #F4E1E6;
+    --font-main: 'Hayah', sans-serif;
+    --border-radius: 16px;
+    --box-shadow: 0 10px 30px rgba(166, 75, 99, 0.07);
+    --primary-gradient: linear-gradient(45deg, #A64B63, #C97B91);
+}
+
+body {
+    background-color: var(--light-bg);
+    font-family: var(--font-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-size:2rem;
+}
+
+.payment-container {
+    max-width: 800px;
+    width: 100%;
+    padding: 1rem;
+}
+
+.payment-card {
+    background: var(--white-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+    .payment-card .card-header {
+        background: var(--primary-gradient);
+        color: var(--white-bg);
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+        .payment-card .card-header h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .payment-card .card-header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+    .payment-card .card-body {
+        padding: 2rem;
+    }
+
+.payment-method-details {
+    text-align: center;
+}
+
+    .payment-method-details h4 {
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1.5rem;
+    }
+
+.qr-code-img {
+    max-width: 200px;
+    margin: 0 auto 1.5rem;
+    display: block;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+
+.payment-instructions {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-light);
+}
+
+    .payment-instructions strong {
+        color: var(--primary-color);
+        font-weight: 100;
+        font-size: 1.2rem;
+    }
+
+.payment-card .card-footer {
+    background-color: var(--light-bg);
+    padding: 1.5rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-outline-main {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-main:hover {
+        background-color: var(--primary-color);
+        color: var(--white-bg);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(166, 75, 99, 0.2);
+    }

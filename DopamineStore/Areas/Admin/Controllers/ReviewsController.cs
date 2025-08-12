@@ -1,4 +1,5 @@
 ﻿using DopamineStore.Data;
+using DopamineStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,8 +28,8 @@ namespace DopamineStore.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 reviewsQuery = reviewsQuery.Where(r => r.Product.Name.Contains(searchString)
-                                                   || r.ReviewerName.Contains(searchString)
-                                                   || r.Comment.Contains(searchString));
+                                                  || r.ReviewerName.Contains(searchString)
+                                                  || r.Comment.Contains(searchString));
             }
 
             if (rating.HasValue)
@@ -53,8 +54,18 @@ namespace DopamineStore.Areas.Admin.Controllers
             review.IsApproved = !review.IsApproved;
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, isApproved = review.IsApproved });
+            return Json(new { success = true, isApproved = review.IsApproved, newLabel = review.IsApproved ? "معتمد" : "غير معتمد" });
         }
+
+        // GET: Admin/Reviews/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+            var review = await _context.Reviews.Include(r => r.Product).FirstOrDefaultAsync(m => m.Id == id);
+            if (review == null) return NotFound();
+            return View(review);
+        }
+
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

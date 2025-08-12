@@ -4,270 +4,314 @@
 @{
     ViewData["Title"] = "لوحة التحكم الرئيسية";
     var monthLabels = Enumerable.Range(0, 12)
-        .Select(i => DateTime.Now.AddMonths(-(11 - i)).ToString("MMM", new CultureInfo("ar-EG")))
+        .Select(i => DateTime.Now.AddMonths(-(11 - i)).ToString("MMMM", new CultureInfo("ar-EG")))
+        .ToList();
+    var dayLabels = Enumerable.Range(0, 7)
+        .Select(i => DateTime.Now.AddDays(-(6 - i)).ToString("dddd", new CultureInfo("ar-EG")))
         .ToList();
 }
 
-<!-- Low Stock Alert -->
 @if (TempData["LowStockWarning"] != null)
 {
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>تنبيهات انخفاض المخزون!</h4>
-        <p>@Html.Raw(TempData["LowStockWarning"])</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="alert alert-warning">
+        <div>
+            <p class="alert-title"><i class="fas fa-exclamation-triangle"></i>تنبيهات انخفاض المخزون!</p>
+            <p>@Html.Raw(TempData["LowStockWarning"])</p>
+        </div>
+        <button onclick="this.parentElement.style.display='none'" class="alert-close-btn">&times;</button>
     </div>
 }
 
-<!-- Page Header -->
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">@ViewData["Title"]</h1>
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
 </div>
 
-<!-- Stat Cards Row -->
-<div class="row">
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card dashboard-stat-card bg-primary-gradient">
-            <div class="card-body">
-                <div>
-                    <div class="stat-title">إجمالي المبيعات</div>
-                    <div class="stat-value">@Model.TotalSales.ToString("C0")</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
-            </div>
+<div class="dashboard-grid grid-cols-4">
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div class="stat-card-icon-wrapper"><i class="fas fa-dollar-sign"></i></div>
+            <p class="stat-card-title">إجمالي المبيعات</p>
         </div>
+        <p class="stat-card-value">@Model.TotalSales.ToString("C0", new CultureInfo("ar-EG"))</p>
     </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card dashboard-stat-card bg-success-gradient">
-            <div class="card-body">
-                <div>
-                    <div class="stat-title">مبيعات اليوم</div>
-                    <div class="stat-value">@Model.SalesToday.ToString("C0")</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div class="stat-card-icon-wrapper"><i class="fas fa-calendar-day"></i></div>
+            <p class="stat-card-title">مبيعات اليوم</p>
         </div>
+        <p class="stat-card-value">@Model.SalesToday.ToString("C0", new CultureInfo("ar-EG"))</p>
     </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card dashboard-stat-card bg-info-gradient">
-            <div class="card-body">
-                <div>
-                    <div class="stat-title">إجمالي الطلبات</div>
-                    <div class="stat-value">@Model.TotalOrders</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div class="stat-card-icon-wrapper"><i class="fas fa-clipboard-list"></i></div>
+            <p class="stat-card-title">إجمالي الطلبات</p>
         </div>
+        <p class="stat-card-value">@Model.TotalOrders.ToString("N0", new CultureInfo("ar-EG"))</p>
     </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card dashboard-stat-card bg-warning-gradient">
-            <div class="card-body">
-                <div>
-                    <div class="stat-title">متوسط قيمة الطلب</div>
-                    <div class="stat-value">@Model.AverageOrderValue.ToString("C0")</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div class="stat-card-icon-wrapper"><i class="fas fa-chart-pie"></i></div>
+            <p class="stat-card-title">متوسط قيمة الطلب</p>
         </div>
+        <p class="stat-card-value">@Model.AverageOrderValue.ToString("C0", new CultureInfo("ar-EG"))</p>
     </div>
 </div>
 
-<!-- Charts Row 1 -->
-<div class="row">
-    <div class="col-lg-8 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-header"><i class="fas fa-chart-area me-1"></i>المبيعات خلال آخر 12 شهر</div>
-            <div class="card-body"><canvas id="monthlySalesChart"></canvas></div>
-        </div>
+<div class="dashboard-grid grid-cols-2">
+    <div class="dashboard-card">
+        <div class="card-header"><i class="fas fa-chart-area"></i>المبيعات خلال آخر 12 شهر</div>
+        <div class="card-body"><div class="chart-container"><canvas id="monthlySalesChart"></canvas></div></div>
     </div>
-    <div class="col-lg-4 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-header"><i class="fas fa-chart-bar me-1"></i>المبيعات خلال آخر 7 أيام</div>
-            <div class="card-body"><canvas id="dailySalesChart"></canvas></div>
+    <div class="dashboard-card">
+        <div class="card-header"><i class="fas fa-chart-bar"></i>المبيعات خلال آخر 7 أيام</div>
+        <div class="card-body"><div class="chart-container"><canvas id="dailySalesChart"></canvas></div></div>
+    </div>
+</div>
+
+<div class="dashboard-grid  grid-cols-2">
+    <div class="dashboard-card">
+        <div class="card-header"><i class="fas fa-tags"></i>الأقسام الأكثر مبيعاً</div>
+        <div class="card-body"><div class="chart-container"><canvas id="categorySalesChart"></canvas></div></div>
+    </div>
+    <div class="dashboard-card">
+        <div class="card-header"><i class="fas fa-fire"></i>المنتجات الأكثر مبيعاً</div>
+        <div class="card-body">
+            <ul class="list">
+                @foreach (var product in Model.TopSellingProducts)
+                {
+                    <li class="list-item">
+                        <div class="list-item-info">
+                            <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://placehold.co/100x100/A64B63/fceef2?text=P" : product.ImageUrl)" class="list-item-img" alt="Product Image">
+                            <span class="list-item-name">@product.ProductName</span>
+                        </div>
+                        <span class="list-item-value value-accent">@product.UnitsSold.ToString("N0", new CultureInfo("ar-EG")) قطعة</span>
+                    </li>
+                }
+            </ul>
         </div>
     </div>
 </div>
 
-<!-- Lists Row -->
-<div class="row">
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow-sm h-100 list-card">
-            <div class="card-header"><i class="fas fa-fire me-1"></i>المنتجات الأكثر مبيعاً</div>
-            <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                    @foreach (var product in Model.TopSellingProducts)
+<div class="dashboard-grid grid-cols-2">
+    <div class="dashboard-card">
+        <div class="card-header"><i class="fas fa-crown"></i>أفضل العملاء</div>
+        <div class="card-body">
+            <ul class="list">
+                @foreach (var customer in Model.TopCustomers)
+                {
+                    <li class="list-item">
+                        <span class="list-item-name">@customer.CustomerName</span>
+                        <span class="list-item-value value-primary">@customer.TotalSpent.ToString("C0", new CultureInfo("ar-EG"))</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="dashboard-card">
+        <div class="card-header"><i class="fas fa-tasks"></i>توزيع حالات الطلبات</div>
+        <div class="card-body doughnut-chart-wrapper">
+            <div class="chart-container" style="min-height: 240px;"><canvas id="orderStatusChart"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-card">
+    <div class="card-header"><i class="fas fa-history"></i>آخر الطلبات</div>
+    <div class="card-body">
+        <div class="table-wrapper">
+            <table class="table orders-table">
+                <thead>
+                    <tr>
+                        <th>رقم الطلب</th>
+                        <th>اسم العميل</th>
+                        <th>تاريخ الطلب</th>
+                        <th>الإجمالي</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RecentOrders != null && Model.RecentOrders.Any())
                     {
-                        <li class="list-group-item">
-                            <div class="list-item-info">
-                                <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://placehold.co/100x100/F4E1E6/A64B63?text=P" : product.ImageUrl)" class="list-item-img" />
-                                <span class="list-item-name">@product.ProductName</span>
-                            </div>
-                            <span class="list-item-value">@product.UnitsSold قطعة</span>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow-sm h-100 list-card">
-            <div class="card-header"><i class="fas fa-crown me-1"></i>أفضل العملاء</div>
-            <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                    @foreach (var customer in Model.TopCustomers)
-                    {
-                        <li class="list-group-item">
-                            <div class="list-item-info">
-                                <span class="list-item-name">@customer.CustomerName</span>
-                            </div>
-                            <span class="list-item-value">@customer.TotalSpent.ToString("C0")</span>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Charts Row 2 -->
-<div class="row">
-    <div class="col-lg-8 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-header"><i class="fas fa-tags me-1"></i>الأقسام الأكثر مبيعاً (حسب عدد القطع)</div>
-            <div class="card-body"><canvas id="categorySalesChart"></canvas></div>
-        </div>
-    </div>
-    <div class="col-lg-4 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-header"><i class="fas fa-tasks me-1"></i>توزيع حالات الطلبات</div>
-            <div class="card-body"><canvas id="orderStatusChart"></canvas></div>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Orders Table -->
-<div class="row">
-    <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <i class="fas fa-history me-1"></i>
-                آخر 5 طلبات
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+                        @foreach (var order in Model.RecentOrders)
+                        {
                             <tr>
-                                <th>رقم الطلب</th>
-                                <th>اسم العميل</th>
-                                <th>تاريخ الطلب</th>
-                                <th>الإجمالي</th>
-                                <th>الحالة</th>
-                                <th></th>
+                                <td>#@order.Id.ToString(new CultureInfo("ar-EG"))</td>
+                                <td>@order.CustomerName</td>
+                                <td>@order.OrderDate.ToString("g", new CultureInfo("ar-EG"))</td>
+                                <td>@order.TotalAmount.ToString("C", new CultureInfo("ar-EG"))</td>
+                                <td>
+                                    <span class="status-badge status-@order.OrderStatus.ToLower().Replace(" ", "-").Replace(" ", "")">@order.OrderStatus</span>
+                                </td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" class="details-link">التفاصيل</a>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.RecentOrders != null && Model.RecentOrders.Any())
-                            {
-                                @foreach (var order in Model.RecentOrders)
-                                {
-                                    <tr>
-                                        <td>#@order.Id</td>
-                                        <td>@order.CustomerName</td>
-                                        <td>@order.OrderDate.ToString("g")</td>
-                                        <td>@order.TotalAmount.ToString("C")</td>
-                                        <td><span class="badge rounded-pill bg-info">@order.OrderStatus</span></td>
-                                        <td>
-                                            <a asp-area="Admin" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary">التفاصيل</a>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="6" class="text-center">لا توجد طلبات حديثة.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="6" class="no-data-cell">لا توجد طلبات حديثة لعرضها.</td></tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Chart Defaults
-            Chart.defaults.font.family = 'Tajawal';
+            if (typeof Chart === 'undefined') { return; }
 
-            // Monthly Sales Chart (Line)
-            var monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
-            new Chart(monthlySalesCtx, {
-                type: 'line',
-                data: {
-                    labels: @Html.Raw(Json.Serialize(monthLabels)),
-                    datasets: [{
-                        label: 'إجمالي المبيعات (ج.م)',
-                        data: @Html.Raw(Json.Serialize(Model.MonthlySalesData)),
-                        backgroundColor: 'rgba(233, 30, 99, 0.1)',
-                        borderColor: 'rgba(233, 30, 99, 1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            const toArabicNumerals = (num) => {
+                if (num === null || num === undefined) return '';
+                const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                return num.toLocaleString('en-US').replace(/[0-9]/g, (d) => arabicNumerals[parseInt(d)]);
+            };
+
+            Chart.defaults.font.family = 'Tajawal', 'sans-serif';
+            Chart.defaults.color = '#d1c5c9';
+
+            const themeColors = {
+                primary: '#A64B63',
+                secondary: '#594A4E',
+                accent: '#D98BA0',
+                textPrimary: '#fceef2',
+                success: '#10b981',
+                warning: '#f59e0b',
+                danger: '#ef4444',
+                info: '#3b82f6'
+            };
+
+            const createTooltip = (currency = 'ج.م', unit = '') => ({
+                backgroundColor: 'rgba(10, 25, 47, 0.85)',
+                backdropFilter: 'blur(5px)',
+                titleFont: { family: 'Tajawal', weight: 'bold', size: 14 },
+                bodyFont: { family: 'Tajawal', size: 12 },
+                padding: 12,
+                cornerRadius: 8,
+                displayColors: true,
+                boxPadding: 4,
+                rtl: true,
+                callbacks: {
+                    label: function(context) {
+                        let value = context.parsed.y ?? context.parsed.x ?? context.parsed;
+                        let label = context.dataset.label || '';
+                        if (label) { label += ': '; }
+                        let formattedValue = toArabicNumerals(value);
+                        let finalLabel = `${label}${formattedValue}`;
+                        if (unit) finalLabel += ` ${unit}`;
+                        if (currency && !unit) finalLabel += ` ${currency}`;
+                        return finalLabel.trim();
+                    }
+                }
             });
 
-            // Daily Sales Chart (Bar)
-            var dailySalesCtx = document.getElementById('dailySalesChart').getContext('2d');
-            new Chart(dailySalesCtx, {
-                type: 'bar',
-                data: {
-                    labels: @Html.Raw(Json.Serialize(Model.Last7DaysLabels)),
-                    datasets: [{
-                        label: 'مبيعات اليوم (ج.م)',
-                        data: @Html.Raw(Json.Serialize(Model.DailySalesLast7Days)),
-                        backgroundColor: '#1cc88a',
-                        borderColor: '#13855c',
-                        borderWidth: 1
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-            });
+            // --- Monthly Sales Chart (Line) ---
+            const monthlySalesCtx = document.getElementById('monthlySalesChart')?.getContext('2d');
+            if(monthlySalesCtx) {
+                const gradient = monthlySalesCtx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(217, 139, 160, 0.4)');
+                gradient.addColorStop(1, 'rgba(10, 25, 47, 0.1)');
 
-            // Category Sales Chart (Bar)
-            var categoryCtx = document.getElementById('categorySalesChart').getContext('2d');
-            new Chart(categoryCtx, {
-                type: 'bar',
-                data: {
-                    labels: @Html.Raw(Json.Serialize(Model.CategoryNames)),
-                    datasets: [{
-                        label: 'عدد القطع المباعة',
-                        data: @Html.Raw(Json.Serialize(Model.CategorySalesData)),
-                        backgroundColor: ['#E91E63', '#F48FB1', '#880E4F', '#AD1457', '#F06292'],
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y' }
-            });
+                new Chart(monthlySalesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(monthLabels)),
+                        datasets: [{
+                            label: 'إجمالي المبيعات',
+                            data: @Html.Raw(Json.Serialize(Model.MonthlySalesData)),
+                            backgroundColor: gradient,
+                            borderColor: themeColors.accent,
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0, pointHoverRadius: 6, pointBackgroundColor: themeColors.accent, pointHoverBorderColor: 'white', pointHoverBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: createTooltip() },
+                        scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#d1c5c9' } } }
+                    }
+                });
+            }
 
-            // Order Status Chart (Doughnut)
-            var orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
-            new Chart(orderStatusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: @Html.Raw(Json.Serialize(Model.OrderStatusLabels)),
-                    datasets: [{
-                        data: @Html.Raw(Json.Serialize(Model.OrderStatusCounts)),
-                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
-                        hoverOffset: 4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+            // --- Daily Sales Chart (Bar) ---
+            const dailySalesCtx = document.getElementById('dailySalesChart')?.getContext('2d');
+            if(dailySalesCtx) {
+                new Chart(dailySalesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(dayLabels)),
+                        datasets: [{
+                            label: 'مبيعات اليوم',
+                            data: @Html.Raw(Json.Serialize(Model.DailySalesLast7Days)),
+                            backgroundColor: 'rgba(166, 75, 99, 0.5)',
+                            borderRadius: 6,
+                            hoverBackgroundColor: themeColors.primary,
+                            borderColor: themeColors.primary,
+                            borderWidth: 0,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: createTooltip() },
+                        scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#d1c5c9' } } }
+                    }
+                });
+            }
+
+            // --- Category Sales Chart (Horizontal Bar) ---
+            const categoryCtx = document.getElementById('categorySalesChart')?.getContext('2d');
+            if(categoryCtx) {
+                new Chart(categoryCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(Model.CategoryNames)),
+                        datasets: [{
+                            label: 'عدد القطع',
+                            data: @Html.Raw(Json.Serialize(Model.CategorySalesData)),
+                            backgroundColor: [ 'rgba(217, 139, 160, 0.8)', 'rgba(217, 139, 160, 0.6)', 'rgba(217, 139, 160, 0.4)', 'rgba(217, 139, 160, 0.2)' ],
+                            borderWidth: 0,
+                            borderRadius: 6,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: createTooltip('', 'قطعة') },
+                        scales: { y: { grid: { display: false, drawBorder: false }, ticks: { color: '#fceef2', font: { weight: '600' } } }, x: { display: false } }
+                    }
+                });
+            }
+
+            // --- Order Status Chart (Doughnut) ---
+            const orderStatusCtx = document.getElementById('orderStatusChart')?.getContext('2d');
+            if(orderStatusCtx) {
+                new Chart(orderStatusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(Model.OrderStatusLabels)),
+                        datasets: [{
+                            data: @Html.Raw(Json.Serialize(Model.OrderStatusCounts)),
+                            backgroundColor: [themeColors.info, themeColors.success, themeColors.warning, themeColors.danger, themeColors.accent],
+                            borderColor: 'rgba(10, 25, 47, 0.5)',
+                            borderWidth: 3,
+                            hoverOffset: 12,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, cutout: '70%',
+                        plugins: {
+                            legend: { position: 'right', labels: { padding: 15, color: '#fceef2', font: { weight: '600' }, boxWidth: 12, usePointStyle: true, pointStyle: 'circle' } },
+                            tooltip: createTooltip('', 'طلب')
+                        }
+                    }
+                });
+            }
         });
     </script>
 }

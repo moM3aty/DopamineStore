@@ -34,13 +34,19 @@ namespace DopamineStore.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] 
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> AddOrRemove(int productId)
         {
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {
-                return Json(new { success = false, message = "يجب تسجيل الدخول أولاً.", redirectTo = Url.Action("Login", "Account") });
+                return Json(new
+                {
+                    success = false,
+                    message = "يجب تسجيل الدخول أولاً لإضافة منتجات للمفضلة.",
+                    redirectTo = Url.Action("Login", "Account")
+                });
             }
 
             var wishlistItem = await _context.WishlistItems

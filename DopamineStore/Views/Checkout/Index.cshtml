@@ -1,51 +1,211 @@
-﻿@model IEnumerable<DopamineStore.Models.Coupon>
+﻿@model CheckoutViewModel
+@using System.Globalization
 @{
-    ViewData["Title"] = "إدارة الكوبونات";
+    ViewData["Title"] = "إتمام الطلب";
+    // Using InvariantCulture for server-side rendering to ensure clean numbers for JS
+    var culture = CultureInfo.InvariantCulture;
 }
 
-<div class="page-header">
-    <h1>@ViewData["Title"]</h1>
-    <a asp-action="Create" class="btn btn-add-new"><i class="fas fa-plus me-2"></i>إضافة كوبون جديد</a>
-</div>
+<div class="checkout-page section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>إتمام الطلب</h2>
+        </div>
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+        }
+        <form asp-action="PlaceOrder" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="CouponCode" id="applied-coupon-code" />
+            <div class="row gy-5">
+                <!-- Shipping & Payment Details -->
+                <div class="col-lg-7">
+                    <div class="checkout-form-card">
+                        <h4>بيانات الشحن</h4>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-12">
+                                <input asp-for="CustomerName" class="form-control" placeholder="الاسم الكامل">
+                                <span asp-validation-for="CustomerName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="رقم الهاتف">
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <select asp-for="ShippingZoneId" asp-items="Model.ShippingZones" class="form-select" id="shippingZoneSelect">
+                                    <option value="">اختر منطقة الشحن</option>
+                                </select>
+                                <span asp-validation-for="ShippingZoneId" class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <input asp-for="ShippingAddress" class="form-control" placeholder="العنوان بالتفصيل">
+                                <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="content-card table-card">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead>
-                <tr>
-                    <th>الكود</th>
-                    <th>نوع الخصم</th>
-                    <th>القيمة</th>
-                    <th>تاريخ الإنتهاء</th>
-                    <th>الحالة</th>
-                    <th class="text-end">إجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="fw-bold">@item.Code</td>
-                        <td>@Html.DisplayFor(modelItem => item.DiscountType)</td>
-                        <td>@item.DiscountValue.ToString("N0") @(item.DiscountType == DiscountType.Percentage ? "%" : "ج.م.")</td>
-                        <td>@item.ExpiryDate.ToShortDateString()</td>
-                        <td>
-                            @if (item.IsActive && item.ExpiryDate >= DateTime.Today)
+                    <div class="checkout-form-card mt-4">
+                        <h4>طريقة الدفع</h4>
+                        <div class="payment-methods mt-3">
+                            <div class="payment-option">
+                                <input type="radio" id="cod" name="PaymentMethod" value="CashOnDelivery" checked>
+                                <label for="cod">
+                                    <i class="bi bi-truck"></i>
+                                    <span>الدفع عند الاستلام</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="instapay" name="PaymentMethod" value="Instapay">
+                                <label for="instapay">
+                                    <i class="bi bi-qr-code"></i>
+                                    <span>انستا باي (Instapay)</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="wallet" name="PaymentMethod" value="Wallet">
+                                <label for="wallet">
+                                    <i class="bi bi-wallet2"></i>
+                                    <span>محفظة إلكترونية</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-5">
+                    <div class="coupon-card">
+                        <h4>كود الخصم</h4>
+                        <div class="input-group">
+                            <button class="btn btn-outline-main" type="button" id="apply-coupon-btn">تطبيق</button>
+                            <input type="text" id="coupon-code-input" class="form-control" placeholder="أدخل كود الخصم هنا">
+                        </div>
+                        <div id="coupon-message" class="mt-2"></div>
+                    </div>
+                    <div class="order-summary-card mb-4">
+                        <h4>ملخص طلبك</h4>
+                        <ul class="list-group list-group-flush mt-3">
+                            @foreach (var item in Model.CartItems)
                             {
-                                <span class="badge bg-success">فعال</span>
+                                <li class="list-group-item d-flex justify-content-between bg-transparent">
+                                    <span>@item.Product.Name <span class="item-quantity numeric-value">x @item.Quantity</span></span>
+                                    <span class="numeric-value">@((item.Product.Price * item.Quantity).ToString("F2", culture)) ج.م.</span>
+                                </li>
                             }
-                            else
-                            {
-                                <span class="badge bg-danger">غير فعال</span>
-                            }
-                        </td>
-                        <td class="text-end action-buttons">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="تعديل"><i class="fas fa-pencil-alt"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            <li class="list-group-item d-flex justify-content-between bg-transparent mt-3">
+                                <span>الإجمالي الفرعي</span>
+                                <span id="subtotal" class="numeric-value" data-value="@Model.SubTotal.ToString(culture)">@Model.SubTotal.ToString("F2", culture) ج.م.</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-transparent">
+                                <span>مصاريف الشحن</span>
+                                <span id="shippingCost">--</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-transparent text-danger" id="discount-row" style="display: none;">
+                                <span>الخصم:</span>
+                                <span id="discountAmount"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between fw-bold h5 bg-transparent mt-3 total-line">
+                                <span>الإجمالي النهائي</span>
+                                <span id="totalAmount" class="numeric-value">@Model.SubTotal.ToString("F2", culture) ج.م.</span>
+                            </li>
+                        </ul>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn-main">تأكيد الطلب</button>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // --- Helper Functions ---
+            const toEasternArabicNumerals = (str) => {
+                if (str === null || str === undefined) return '';
+                let numStr = String(str);
+                const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                return numStr.replace(/[0-9]/g, w => arabicNumerals[+w]).replace('.', '٫');
+            };
+
+            const currencyFormatter = new Intl.NumberFormat('ar-EG-u-nu-arab', {
+                style: 'currency',
+                currency: 'EGP',
+                minimumFractionDigits: 2
+            });
+
+            function convertAllNumbers() {
+                $('.numeric-value').each(function() {
+                    $(this).text(toEasternArabicNumerals($(this).text()));
+                });
+            }
+
+            function updateTotals() {
+                 var subtotal = parseFloat($('#subtotal').data('value')) || 0;
+                 var shippingCost = parseFloat($('#shippingCost').data('value')) || 0;
+                 var discountAmount = parseFloat($('#discountAmount').data('value')) || 0;
+
+                 var newTotal = (subtotal - discountAmount) + shippingCost;
+
+                 $('#discountAmount').text("- " + currencyFormatter.format(discountAmount));
+                 $('#totalAmount').text(currencyFormatter.format(newTotal > 0 ? newTotal : 0));
+            }
+
+            // --- Initial Conversion on Page Load ---
+            convertAllNumbers();
+
+            // --- Event Listeners ---
+            $('#shippingZoneSelect').on('change', function() {
+                var zoneId = $(this).val();
+                if (zoneId) {
+                    $.get('/Checkout/GetShippingCost', { zoneId: zoneId }, function(response) {
+                        if (response.success) {
+                            var shippingCost = parseFloat(response.cost);
+                            $('#shippingCost').text(currencyFormatter.format(shippingCost)).data('value', shippingCost);
+                            updateTotals();
+                        }
+                    });
+                } else {
+                    $('#shippingCost').text('--').data('value', 0);
+                    updateTotals();
+                }
+            });
+
+            $('#apply-coupon-btn').on('click', function() {
+                var couponCode = $('#coupon-code-input').val();
+                var messageDiv = $('#coupon-message');
+                if (!couponCode) {
+                    messageDiv.text('الرجاء إدخال كود الخصم.').removeClass('text-success').addClass('text-danger');
+                    return;
+                }
+
+                $.post('/Checkout/ApplyCoupon', { couponCode: couponCode }, function(response) {
+                    if (response.success) {
+                        messageDiv.text(response.message).removeClass('text-danger').addClass('text-success');
+                        $('#applied-coupon-code').val(couponCode);
+                        $('#discountAmount').data('value', response.discountAmount);
+                        $('#discount-row').show();
+                        updateTotals();
+                    } else {
+                        messageDiv.text(response.message).removeClass('text-success').addClass('text-danger');
+                        $('#applied-coupon-code').val('');
+                        $('#discountAmount').data('value', 0);
+                        $('#discount-row').hide();
+                        updateTotals();
+                    }
+                });
+            });
+
+            // Trigger change event if a zone is already selected on page load
+            if ($('#shippingZoneSelect').val()) {
+                $('#shippingZoneSelect').trigger('change');
+            }
+        });
+    </script>
+}

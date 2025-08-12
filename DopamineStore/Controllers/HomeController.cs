@@ -78,6 +78,8 @@ namespace DopamineStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitReview(Review model)
         {
+            ModelState.Remove("Product");
+            ModelState.Remove("ReviewerName");
             if (!ModelState.IsValid || model.ProductId <= 0)
             {
                 TempData["ErrorMessage"] = "يرجى التأكد من ملء جميع الحقول بشكل صحيح.";

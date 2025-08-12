@@ -1,5 +1,4 @@
-﻿
-:root {
+﻿:root {
     --primary-color: #A64B63;
     --secondary-color: #D98BA0;
     --accent-color: #F4E1E6;
@@ -33,10 +32,28 @@ body {
 .invoice-paper {
     background: var(--white-bg);
     border-radius: 8px;
-    padding: 0; 
+    padding: 0;
     box-shadow: 0 10px 45px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
+}
+
+.watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    opacity: 0.04;
+    z-index: 1;
+}
+
+    .watermark img {
+        width: 400px;
+    }
+
+.invoice-header, .invoice-parties, .invoice-items, .invoice-summary, .invoice-footer {
+    position: relative;
+    z-index: 2;
 }
 
 .invoice-header {
@@ -161,9 +178,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 1rem;
-    padding: 2.5rem 3rem;
-    background-color: var(--light-bg);
+    margin-top: 2.5rem;
+    padding: 0 3rem 2.5rem 3rem; 
+    background-color: transparent;
 }
 
 .invoice-payment-info {
@@ -184,13 +201,13 @@ body {
 
 .invoice-totals {
     width: 100%;
-    max-width: 300px;
+    max-width: 320px; 
 }
 
 .totals-item {
     display: flex;
     justify-content: space-between;
-    padding: 0.75rem 0;
+    padding: 0.8rem 0;
     color: var(--text-dark);
 }
 
@@ -203,20 +220,38 @@ body {
     }
 
     .totals-item.grand-total {
-        border-top: 2px solid var(--primary-color);
-        margin-top: 0.5rem;
-        padding-top: 1rem;
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--primary-color);
+        background: transparent;
+        border-top: 3px solid var(--primary-color);
+        padding: 1.25rem 0;
+        margin-top: 1rem;
+        text-align: right;
+        display: block; 
     }
+
+        .totals-item.grand-total .label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .totals-item.grand-total .value {
+            font-family: var(--font-main); 
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
 
 .invoice-footer {
     text-align: center;
     padding: 1.5rem 3rem;
     color: var(--text-light);
     font-size: 0.9rem;
-    background-color: var(--accent-color);
+    background-color: var(--light-bg);
+    border-top: 1px solid var(--border-color);
 }
 
 
@@ -237,18 +272,23 @@ body {
     .invoice-paper {
         box-shadow: none !important;
         border: none !important;
-        padding: 1rem; 
+        padding: 1rem;
     }
 
     .invoice-summary {
-        background-color: transparent !important; 
+        background-color: transparent !important;
     }
+
     .invoice-paper, .invoice-paper * {
         color: #000 !important;
     }
-
     .totals-item.grand-total {
         background-color: #f1f1f1 !important;
-        border: 1px solid #ccc !important;
+        color: #000 !important;
     }
+
+        .totals-item.grand-total .label {
+            color: #000 !important;
+        }
+
 }

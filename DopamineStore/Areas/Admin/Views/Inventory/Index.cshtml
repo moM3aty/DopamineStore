@@ -35,7 +35,7 @@
 
 <div class="content-card product-table-card">
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle professional-table">
             <thead>
                 <tr>
                     <th class="p-3">المنتج</th>
@@ -70,14 +70,23 @@
                             }
                         </td>
                         <td class="p-3">
-                            <form asp-action="UpdateStock" method="post" class="update-stock-form d-flex">
+                            <div class="update-stock-container d-flex align-items-center">
                                 @Html.AntiForgeryToken()
-                                <input type="hidden" name="productId" value="@item.Id" />
                                 <div class="input-group">
-                                    <input type="number" class="form-control stock-quantity-input" name="quantity" value="@item.StockQuantity" data-product-id="@item.Id" min="0">
-                                    <button class="btn btn-outline-success btn-update-stock" type="submit" data-product-id="@item.Id" style="display:none;">حفظ</button>
+                                    <input type="number" class="form-control stock-quantity-input"
+                                           name="quantity"
+                                           value="@item.StockQuantity"
+                                           data-product-id="@item.Id"
+                                           min="0">
+                                    <button class="btn btn-outline-success btn-update-stock"
+                                            type="button"
+                                            data-product-id="@item.Id"
+                                            style="display:none;"
+                                            title="حفظ الكمية الجديدة">
+                                        <i class="fas fa-check"></i>
+                                    </button>
                                 </div>
-                            </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -90,10 +99,57 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.stock-quantity-input').forEach(input => {
+                const originalValue = input.value;
                 input.addEventListener('input', function() {
-                    this.closest('.input-group').querySelector('.btn-update-stock').style.display = 'inline-block';
+                    const saveButton = this.closest('.input-group').querySelector('.btn-update-stock');
+                    if (this.value !== originalValue) {
+                        saveButton.style.display = 'inline-block';
+                    } else {
+                        saveButton.style.display = 'none';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.btn-update-stock').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.dataset.productId;
+                    const container = this.closest('.update-stock-container');
+                    const input = container.querySelector('.stock-quantity-input');
+                    const newQuantity = input.value;
+                    const token = container.querySelector('input[name="__RequestVerificationToken"]').value;
+                    const saveButton = this;
+
+                    saveButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+                    saveButton.disabled = true;
+
+                    fetch('/Admin/Inventory/UpdateStock', { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': token
+                        },
+                        body: `productId=${productId}&quantity=${newQuantity}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            saveButton.style.display = 'none';
+                        } else {
+                            alert(data.message || 'حدث خطأ أثناء حفظ البيانات.');
+                            input.value = data.oldQuantity; 
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('فشل الاتصال بالخادم.');
+                    })
+                    .finally(() => {
+                        saveButton.innerHTML = '<i class="fas fa-check"></i>';
+                        saveButton.disabled = false;
+                    });
                 });
             });
         });
     </script>
 }
+

@@ -8,6 +8,7 @@
     var averageRating = approvedReviews.Any() ? approvedReviews.Average(r => r.Rating) : 0;
     var totalRatings = approvedReviews.Count();
     bool hasOffer = Model.Product.OfferEndDate.HasValue && Model.Product.OfferEndDate > DateTime.Now;
+    bool isAvailable = Model.Product.StockQuantity > 0;
 }
 
 <div class="product-details-section">
@@ -21,7 +22,7 @@
                     </div>
                     @if (Model.Product.ProductImages.Count > 1)
                     {
-                        <div class="gallery-thumbnails d-flex gap-2">
+                        <div class="gallery-thumbnails">
                             @foreach (var image in Model.Product.ProductImages)
                             {
                                 <div class="thumbnail-item @(image.ImageUrl == Model.Product.ImageUrl ? "active" : "")">
@@ -36,8 +37,16 @@
             <!-- Product Info -->
             <div class="col-lg-5" data-aos="fade-left" data-aos-delay="100">
                 <div class="product-info">
-                    <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@Model.Product.CategoryId" class="category-link">@Model.Product.Category.Name</a>
-                    <h2 class="mt-2">@Model.Product.Name</h2>
+                    <div class="product-meta">
+                        <span class="category-badge"><i class="bi bi-tag-fill"></i> @Model.Product.Category.Name</span>
+                        <span class="availability-badge @(isAvailable ? "in-stock" : "out-of-stock")">
+                            <i class="bi @(isAvailable ? "bi-check-circle-fill" : "bi-x-circle-fill")"></i>
+                            @(isAvailable ? "متوفر" : "نفذت الكمية")
+                        </span>
+                    </div>
+
+                    <h2 class="product-title">@Model.Product.Name</h2>
+
                     <div class="d-flex align-items-center mb-3">
                         <div class="star-rating-display me-2">
                             @for (int i = 1; i <= 5; i++)
@@ -47,7 +56,6 @@
                         </div>
                         <span class="text-muted">(@totalRatings مراجعات)</span>
                     </div>
-                    <p class="text-dark">@Model.Product.Description</p>
 
                     <div class="price-section my-4">
                         <span class="current-price">@Model.Product.Price.ToString("C")</span>
@@ -60,106 +68,114 @@
                     @if (hasOffer)
                     {
                         <div class="offer-ends-section">
-                            <p class="offer-ends-text">ينتهي العرض خلال:</p>
+                            <p class="offer-ends-text"><i class="bi bi-clock-history"></i> ينتهي العرض خلال:</p>
                             <div class="countdown-timer-details" data-end-date="@Model.Product.OfferEndDate.Value.ToString("o")"></div>
                         </div>
                     }
 
-                    <div class="add-to-cart-controls mt-4">
+                    <div class="add-to-cart-controls">
                         <form asp-controller="Cart" asp-action="AddToCart" method="post" class="add-to-cart-form">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="productId" value="@Model.Product.Id" />
-                            <div class="row g-2 align-items-center">
-                                <div class="col-lg-5">
+                            <div class="row g-2 mb-3">
+                                <div class="col-5">
                                     <div class="quantity-selector">
                                         <button type="button" class="quantity-btn quantity-minus">-</button>
                                         <input type="number" class="quantity-input" name="quantity" value="1" min="1" max="@Model.Product.StockQuantity">
                                         <button type="button" class="quantity-btn quantity-plus">+</button>
                                     </div>
                                 </div>
-                                <div class="col-lg-7">
-                                    <button type="submit" class="btn-main w-100 btn-add-to-cart" @(Model.Product.StockQuantity == 0 ? "disabled" : "")>
-                                        @(Model.Product.StockQuantity == 0 ? "نفذت الكمية" : "أضف إلى السلة")
+                                <div class="col-7">
+                                    <button type="submit" class="btn-main w-100 btn-add-to-cart" @(!isAvailable ? "disabled" : "")>
+                                        <i class="bi bi-cart-plus-fill me-2"></i>
+                                        @(!isAvailable ? "نفذت الكمية" : "أضف للسلة")
                                     </button>
                                 </div>
                             </div>
                         </form>
-                        <div class="mt-3">
-                            <button type="button" class="wishlist-btn-details" data-product-id="@Model.Product.Id">
-                                <i class="bi bi-heart"></i> <span>أضف إلى المفضلة</span>
-                            </button>
-                        </div>
+                        <button type="button" class="wishlist-btn-details" data-product-id="@Model.Product.Id">
+                            <i class="bi bi-heart"></i> <span>أضف إلى المفضلة</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Review Section -->
-<div class="reviews-section section-bg">
-    <div class="container" data-aos="fade-up">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="section-header">
-                    <h2>آراء العملاء</h2>
+        <!-- Description & Reviews Tabs -->
+        <div class="product-details-tabs mt-5">
+            <ul class="nav nav-tabs" id="productTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description-pane" type="button" role="tab">الوصف</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-pane" type="button" role="tab">آراء العملاء (@totalRatings)</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="productTabContent">
+                <div class="tab-pane fade show active" id="description-pane" role="tabpanel">
+                    <div class="tab-pane-content">
+                        <p>@Model.Product.Description</p>
+                    </div>
                 </div>
-                <div class="reviews-list mb-5">
-                    @if (approvedReviews.Any())
-                    {
-                        foreach (var review in approvedReviews)
+                <div class="tab-pane fade" id="reviews-pane" role="tabpanel">
+                    <div class="tab-pane-content">
+                        @if (approvedReviews.Any())
                         {
-                            <div class="review-item">
-                                <div class="review-header">
-                                    <h5 class="reviewer-name">@review.ReviewerName</h5>
-                                    <div class="star-rating-display">
-                                        @for (int i = 1; i <= 5; i++)
-                                        {
-                                            <i class="fas fa-star @(i <= review.Rating ? "filled" : "")"></i>
-                                        }
+                            <div class="reviews-masonry">
+                                @foreach (var review in approvedReviews)
+                                {
+                                    <div class="review-card">
+                                        <div class="review-header">
+                                            <div class="reviewer-avatar">@review.ReviewerName.FirstOrDefault()</div>
+                                            <div>
+                                                <h5 class="reviewer-name">@review.ReviewerName</h5>
+                                                <div class="star-rating-display">
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        <i class="fas fa-star @(i <= review.Rating ? "filled" : "")"></i>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="review-comment">@review.Comment</p>
                                     </div>
-                                </div>
-                                <p class="review-comment">"@review.Comment"</p>
-                                <small class="review-date text-muted">@review.ReviewDate.ToShortDateString()</small>
+                                }
                             </div>
                         }
-                    }
-                    else
-                    {
-                        <p class="text-center text-muted">لا توجد مراجعات لهذا المنتج حتى الآن. كن أول من يكتب مراجعة!</p>
-                    }
-                </div>
-                <div class="add-review-form">
-                    <h4>أضف مراجعتك</h4>
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <form asp-action="SubmitReview" method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="ProductId" value="@Model.Product.Id" />
-                            <div class="mb-3">
-                                <label class="form-label">تقييمك للمنتج</label>
-                                <div class="star-rating-input">
-                                    <i class="bi bi-star" data-value="1"></i>
-                                    <i class="bi bi-star" data-value="2"></i>
-                                    <i class="bi bi-star" data-value="3"></i>
-                                    <i class="bi bi-star" data-value="4"></i>
-                                    <i class="bi bi-star" data-value="5"></i>
+                        else
+                        {
+                            <p class="text-center text-muted mt-4">لا توجد مراجعات لهذا المنتج حتى الآن.</p>
+                        }
+
+                        <div class="add-review-form">
+                            <h4>أضف مراجعتك</h4>
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <form asp-action="SubmitReview" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+                                    <div class="mb-3">
+                                        <label class="form-label">تقييمك للمنتج</label>
+                                        <div class="star-rating-input">
+                                            <i class="bi bi-star" data-value="1"></i><i class="bi bi-star" data-value="2"></i><i class="bi bi-star" data-value="3"></i><i class="bi bi-star" data-value="4"></i><i class="bi bi-star" data-value="5"></i>
+                                        </div>
+                                        <input type="hidden" name="Rating" id="rating-value" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="Comment" class="form-label">اكتب تعليقك هنا</label>
+                                        <textarea name="Comment" class="form-control" rows="4" required placeholder="ما رأيك في المنتج؟"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-main">إرسال المراجعة</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="alert alert-light text-center border">
+                                    يجب عليك <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="fw-bold">تسجيل الدخول</a> أولاً لإضافة مراجعة.
                                 </div>
-                                <input type="hidden" name="Rating" id="rating-value" required />
-                            </div>
-                            <div class="mb-3">
-                                <label for="Comment" class="form-label">اكتب تعليقك هنا</label>
-                                <textarea name="Comment" class="form-control" rows="4" required placeholder="ما رأيك في المنتج؟"></textarea>
-                            </div>
-                            <button type="submit" class="btn-main">إرسال المراجعة</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <div class="alert alert-light text-center border">
-                            يجب عليك <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="fw-bold">تسجيل الدخول</a> أولاً لإضافة مراجعة.
+                            }
                         </div>
-                    }
+                    </div>
                 </div>
             </div>
         </div>

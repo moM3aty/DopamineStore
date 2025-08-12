@@ -19,8 +19,34 @@
     --border-radius: 16px;
     --box-shadow: 0 10px 30px rgba(166, 75, 99, 0.07);
     --transition-speed: 0.4s;
+    --primary-glow: #A64B63;
+    --accent-glow: #D98BA0;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
 
+::-webkit-scrollbar-track {
+    background: rgba(10, 25, 47, 0.5) !important;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--primary-glow), var(--accent-glow)) !important;
+    border-radius: 10px;
+    border: 2px solid rgba(10, 25, 47, 0.5);
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-glow) !important;
+    }
+
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-glow) rgba(10, 25, 47, 0.5);
+}
 body {
     font-family: var(--font-main);
     color: var(--text-dark);

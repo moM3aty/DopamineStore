@@ -1,0 +1,79 @@
+﻿@model Order
+@using System.Globalization
+@using System.Text
+@{
+    Layout = null;
+    var arabicCulture = new CultureInfo("ar-EG");
+}
+@functions {
+    public static string ToArabicNumerals(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+        return new StringBuilder(input)
+            .Replace('0', '٠')
+            .Replace('1', '١')
+            .Replace('2', '٢')
+            .Replace('3', '٣')
+            .Replace('4', '٤')
+            .Replace('5', '٥')
+            .Replace('6', '٦')
+            .Replace('7', '٧')
+            .Replace('8', '٨')
+            .Replace('9', '٩').ToString();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إتمام الدفع للطلب رقم #@ToArabicNumerals(Model.Id.ToString())</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="~/css/payment.css" rel="stylesheet" asp-append-version="true" />
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <div class="card-header">
+                <h3>تعليمات الدفع</h3>
+                <p>طلب رقم: #@ToArabicNumerals(Model.Id.ToString())</p>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle-fill"></i>
+                    سيتم تأكيد طلبك وشحنه فور استلام المبلغ.
+                </div>
+
+                @if (Model.PaymentMethod == "Instapay")
+                {
+                    <div class="payment-method-details">
+                        <h4>الدفع عبر انستا باي (Instapay)</h4>
+                        <img src="~/img/insta.jpg" alt="Instapay QR Code" class="qr-code-img">
+                        <p class="payment-instructions">
+                            امسح الكود أو قم بتحويل المبلغ الإجمالي وقدره <strong>@ToArabicNumerals(Model.TotalAmount.ToString("C", arabicCulture))</strong>
+                            إلى حساب انستا باي التالي: <strong>dopamine.Salmaatef@instapay</strong>.
+                        </p>
+                    </div>
+                }
+                else if (Model.PaymentMethod == "Wallet")
+                {
+                    <div class="payment-method-details">
+                        <h4>الدفع عبر فودافون كاش</h4>
+                        <img src="~/img/vodafone.png" alt="Vodafone Cash QR Code" class="qr-code-img">
+                        <p class="payment-instructions">
+                            امسح الكود أو قم بتحويل المبلغ الإجمالي وقدره <strong>@ToArabicNumerals(Model.TotalAmount.ToString("C", arabicCulture))</strong>
+                            إلى الرقم التالي: <strong>@ToArabicNumerals("٠١٢٠٢٦٥٤٦٩٦")</strong>.
+                        </p>
+                    </div>
+                }
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-main">العودة للصفحة الرئيسية</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

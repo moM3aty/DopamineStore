@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
-using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +15,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { new CultureInfo("ar-EG") };
+    options.DefaultRequestCulture = new RequestCulture("ar-EG");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<ImageService>();
@@ -53,6 +58,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+app.UseRequestLocalization();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
